@@ -1,6 +1,6 @@
 
 
-const Gameboard = (() => {
+const gameBoard = (() => {
     let gameboardArray = [];
     const inputMove = (marker, space) => {
         gameboardArray[space] = marker;
@@ -12,4 +12,22 @@ const Gameboard = (() => {
     };
 })();
 
-Gameboard.inputMove('X', 5);
+gameBoard.inputMove('X', 5);
+
+const gameFlow = (() => {
+    
+})();
+
+const Player = (name) => {
+    const printName = () => {
+        console.log(`Your marker is ${name}`);
+    };
+    
+    return {
+        printName
+    };
+};
+
+const jBone = Player('jBone');
+jBone.printName();
+
