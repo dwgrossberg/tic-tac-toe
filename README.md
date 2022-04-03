@@ -1,4 +1,4 @@
 # tic-tac-toe
 A simple tic-tac-toe app built using vanilla JS
 
-Built and designed as part of the Odin Project, as a sample use-case of factory function and module design patterns.
+Built as part of the Odin Project curriculum, this game was engineered using factory functions and module design patterns, with the aim of using as little global code as possible.
