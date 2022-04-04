@@ -15,8 +15,6 @@ const gameBoard = (() => {
 
 gameBoard.inputMove('X', 5);
 
-console.log(gameBoard.gameboardArray);
-
 const gameFlow = (() => {
     // determine winners and losers and where to point them
 })();
@@ -40,17 +38,17 @@ const displayController = (() => {
 displayController.displayToDOM();
 
 const Player = (name) => {
-    const printName = () => {
+    const marker = () => {
         console.log(`Your marker is ${name}`);
     };
     
     return {
-        printName
+        marker
     };
 };
 
 const X = Player('X');
 const O = Player('O');
-X.printName();
-O.printName();
+X.marker();
+O.marker();
 
