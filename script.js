@@ -3,7 +3,7 @@
 const gameBoard = (() => {
     let gameboardArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const inputMove = (marker, space) => {
-        gameboardArray[space] = marker;
+        gameboardArray[space - 1] = marker;
         console.log(gameboardArray);
     };
 
@@ -24,6 +24,7 @@ const displayController = (() => {
     const displayToDOM = () => {
         for (let i = 0; i < gameBoard.gameboardArray.length; i++) {
             let gamePiece = document.createElement('div');
+            gamePiece.dataset.id = `${i + 1}`
             gamePiece.innerText = gameBoard.gameboardArray[i];
             gameBoardDOM.appendChild(gamePiece);
         }
