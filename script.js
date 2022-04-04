@@ -1,22 +1,43 @@
 
 
 const gameBoard = (() => {
-    let gameboardArray = [];
+    let gameboardArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     const inputMove = (marker, space) => {
         gameboardArray[space] = marker;
         console.log(gameboardArray);
     };
 
     return {
-        inputMove
+        inputMove,
+        gameboardArray
     };
 })();
 
 gameBoard.inputMove('X', 5);
 
+console.log(gameBoard.gameboardArray);
+
 const gameFlow = (() => {
-    
+    // determine winners and losers and where to point them
 })();
+
+const displayController = (() => {
+    const gameBoardDOM = document.getElementById('game-board');
+    const displayToDOM = () => {
+        for (let i = 0; i < gameBoard.gameboardArray.length; i++) {
+            let gamePiece = document.createElement('div');
+            gamePiece.innerText = gameBoard.gameboardArray[i];
+            gameBoardDOM.appendChild(gamePiece);
+        }
+    }
+
+    return {
+        displayToDOM
+    }
+
+})();
+
+displayController.displayToDOM();
 
 const Player = (name) => {
     const printName = () => {
@@ -28,6 +49,8 @@ const Player = (name) => {
     };
 };
 
-const jBone = Player('jBone');
-jBone.printName();
+const X = Player('X');
+const O = Player('O');
+X.printName();
+O.printName();
 
