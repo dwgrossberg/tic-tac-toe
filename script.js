@@ -1,7 +1,7 @@
 
 
 const gameBoard = (() => {
-    let gameboardArray = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let gameboardArray = ['', '', '', '', '', '', '', '', '']
     const inputMove = (marker, space) => {
         gameboardArray[space - 1] = marker;
         console.log(gameboardArray);
@@ -24,24 +24,33 @@ const displayController = (() => {
     const displayToDOM = () => {
         for (let i = 0; i < gameBoard.gameboardArray.length; i++) {
             let gamePiece = document.createElement('div');
+            gamePiece.classList.add('game-piece');
             gamePiece.dataset.id = `${i + 1}`
             gamePiece.innerText = gameBoard.gameboardArray[i];
             gameBoardDOM.appendChild(gamePiece);
         }
     }
+    const addMark = () => {
+        const gamePieces = document.getElementsByClassName('game-piece');
+        Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', () => {
+            let gamePieceID = div.dataset.id;
+            gameBoard.inputMove('O', gamePieceID);
+            div.innerText = gameBoard.gameboardArray[gamePieceID - 1];
+        }));
+    }
 
     return {
-        displayToDOM
+        displayToDOM,
+        addMark
     }
 
 })();
 
 displayController.displayToDOM();
+displayController.addMark();
 
 const Player = (name) => {
-    const marker = () => {
-        console.log(`Your marker is ${name}`);
-    };
+    const marker = name;
     
     return {
         marker
@@ -50,6 +59,6 @@ const Player = (name) => {
 
 const X = Player('X');
 const O = Player('O');
-X.marker();
-O.marker();
+console.log(X.marker);
+console.log(O.marker);
 
