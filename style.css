@@ -39,3 +39,18 @@ body {
     justify-content: center;
     border: dashed 1px greenyellow;
 }
+
+.O div,
+.X div {
+    position: relative;
+    background-color: darkseagreen;
+    opacity: .25;
+}
+
+.O::after {
+    position: absolute;
+    content: 'O Wins!';
+    font-size: 22px;
+    
+    
+}

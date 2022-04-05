@@ -31,8 +31,9 @@ const gameFlow = (() => {
             whoIsWinner(check[0]);
         } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
             whoIsWinner(check[2]);
-        // } else if () {
-
+        } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
+            console.log('Tie Game!');
+            displayController.clearBoard()
         } else {
             console.log('no winner yet');
         }
@@ -41,11 +42,13 @@ const gameFlow = (() => {
 
     const whoIsWinner = (gamePiece) => {
         if (gamePiece === player1.marker) {
-            alert(player1.name + ' wins!');
-            displayController.clearBoard();
+            console.log(player1.name + ' wins!');
+            displayController.displayWinner(player1.marker);
+            // displayController.clearBoard();
         } else {
-            alert(player2.name + ' wins!');
-            displayController.clearBoard();
+            console.log(player2.name + ' wins!');
+            displayController.displayWinner(player2.marker);
+            // displayController.clearBoard();
         }
     }
     
@@ -57,9 +60,9 @@ const gameFlow = (() => {
 })();
 
 const displayController = (() => {
+    const gameBoardDOM = document.getElementById('game-board');
     const displayToDOM = () => {
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
-            const gameBoardDOM = document.getElementById('game-board');
             let gamePiece = document.createElement('div');
             gamePiece.classList.add('game-piece');
             gamePiece.dataset.id = `${i + 1}`
@@ -68,20 +71,27 @@ const displayController = (() => {
         }
     }
     const gamePieces = document.getElementsByClassName('game-piece');
+    let counter = 0;
+    const addGamePiece = (e) => {
+        let gamePiece = e.target;
+        let gamePieceID = e.target.dataset.id;
+        if (counter % 2 === 0 && gamePiece.innerText === '') {
+            gameBoard.inputMove(player1.marker, gamePieceID);
+            gamePiece.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
+            counter++;
+        } else if (counter % 2 !== 0 && gamePiece.innerText === '') {
+            gameBoard.inputMove(player2.marker, gamePieceID);
+            gamePiece.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
+            counter++;
+        }
+    }
     const addMark = () => {
-        let counter = 0;
-        Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', () => {
-            let gamePieceID = div.dataset.id;
-            if (counter % 2 === 0 && div.innerText === '') {
-                gameBoard.inputMove(player1.marker, gamePieceID);
-                div.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
-                counter++;
-            } else if (counter % 2 !== 0 && div.innerText === '') {
-                gameBoard.inputMove(player2.marker, gamePieceID);
-                div.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
-                counter++;
-            }
-        }));
+        Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
+    }
+    const displayWinner = (winner) => {
+        gameBoardDOM.classList.add(winner);
+        Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
+        
     }
 
     const clearBoard = () => {
@@ -97,6 +107,7 @@ const displayController = (() => {
     return {
         displayToDOM,
         addMark,
+        displayWinner,
         clearBoard
     }
 })();
