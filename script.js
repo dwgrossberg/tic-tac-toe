@@ -91,24 +91,27 @@ const displayController = (() => {
     const displayWinner = (winner) => {
         gameBoardDOM.classList.add(winner);
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
-        
+        window.addEventListener('mousedown', clearBoard)
     }
 
     const clearBoard = () => {
-        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
-            gameBoard.gameBoardArray[i] = '';
-        };
-        Array.from(gamePieces).forEach(div => {
-            div.innerText = '';
+        window.addEventListener('mousedown', () => {
+            let winner = gameBoardDOM.classList[0];
+            gameBoardDOM.classList.remove(winner);
+            for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+                gameBoard.gameBoardArray[i] = '';
+            };
+            Array.from(gamePieces).forEach(div => {
+                div.innerText = '';
+            });
+            console.log(gameBoard.gameBoardArray);
         });
-        console.log(gameBoard.gameBoardArray);
     }
 
     return {
         displayToDOM,
         addMark,
-        displayWinner,
-        clearBoard
+        displayWinner
     }
 })();
 
