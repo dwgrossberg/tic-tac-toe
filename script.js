@@ -16,40 +16,50 @@ const gameFlow = (() => {
     const checkForWinner = () => {
         const check = gameBoard.gameBoardArray;
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
-            console.log('you win');
+            whoIsWinner(check[0]);
         } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
-            console.log('you win');
+            whoIsWinner(check[3]);
         } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
-            console.log('you win');
+            whoIsWinner(check[6]);
         } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
-            console.log('you win');
+            whoIsWinner(check[0]);
         } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
-            console.log('you win');
+            whoIsWinner(check[1]);
         } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
-            console.log('you win');
+            whoIsWinner(check[2]);
         } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
-            console.log('you win');
+            whoIsWinner(check[0]);
         } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
-            console.log('you win');
+            whoIsWinner(check[2]);
+        // } else if () {
+
         } else {
             console.log('no winner yet');
         }
  
-    
+    }
+
+    const whoIsWinner = (gamePiece) => {
+        if (gamePiece === player1.marker) {
+            alert(player1.name + ' wins!');
+            displayController.clearBoard();
+        } else {
+            alert(player2.name + ' wins!');
+            displayController.clearBoard();
+        }
     }
     
 
     return {
         checkForWinner
         
-        
     }
 })();
 
 const displayController = (() => {
-    const gameBoardDOM = document.getElementById('game-board');
     const displayToDOM = () => {
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            const gameBoardDOM = document.getElementById('game-board');
             let gamePiece = document.createElement('div');
             gamePiece.classList.add('game-piece');
             gamePiece.dataset.id = `${i + 1}`
@@ -57,8 +67,8 @@ const displayController = (() => {
             gameBoardDOM.appendChild(gamePiece);
         }
     }
+    const gamePieces = document.getElementsByClassName('game-piece');
     const addMark = () => {
-        const gamePieces = document.getElementsByClassName('game-piece');
         let counter = 0;
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', () => {
             let gamePieceID = div.dataset.id;
@@ -66,31 +76,41 @@ const displayController = (() => {
                 gameBoard.inputMove(player1.marker, gamePieceID);
                 div.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
                 counter++;
-                console.log(counter);
             } else if (counter % 2 !== 0 && div.innerText === '') {
                 gameBoard.inputMove(player2.marker, gamePieceID);
                 div.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
                 counter++;
-                console.log(counter);
-
             }
         }));
     }
 
+    const clearBoard = () => {
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            gameBoard.gameBoardArray[i] = '';
+        };
+        Array.from(gamePieces).forEach(div => {
+            div.innerText = '';
+        });
+        console.log(gameBoard.gameBoardArray);
+    }
+
     return {
         displayToDOM,
-        addMark
+        addMark,
+        clearBoard
     }
 })();
 
 displayController.displayToDOM();
 displayController.addMark();
 
-const Player = (name) => {
-   const marker = name;
-    
+const Player = (gamePiece) => {
+   const marker = gamePiece;
+   const name = `Player ${gamePiece}`; 
+
     return {
-        marker
+        marker,
+        name
     };
 };
 
