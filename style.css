@@ -1,3 +1,7 @@
+:root {
+    --game-board-color: purple;
+}
+
 *,
 body {
     padding: 0;
@@ -7,7 +11,7 @@ body {
 
 .container {
     display: grid;
-    grid-template: 150px 1fr 100px / 1fr;
+    grid-template: 200px 1fr 100px / 1fr;
     place-items: center;
     width: 100vw;
     height: 100vh;
@@ -15,20 +19,30 @@ body {
 
 .header {
     grid-area: 1 / 1 / 2 / 2;
+    display: grid;
+    grid-template: 1fr 1fr / 1fr;
     background-color: darksalmon;
     width: 100%;
     height: 100%;
 }
 
+.header-top {
+    grid-area: 1 / 1 / 2 / 2;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 44px;
+    font-weight: 500;
+}
 
 #game-board {
     grid-area: 2 / 1 / 3 / 2;
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-    place-items: center;
     width: 300px;
     height: 300px;
-    border: solid 2px purple;
+    margin-top: 30px;
 }
 
 #game-board div {
@@ -37,20 +51,91 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: dashed 1px greenyellow;
+}
+
+#game-board div:nth-child(1) {
+    border-bottom: dashed 2px var(--game-board-color);
+    border-right: dashed 2px var(--game-board-color);
+}
+
+#game-board div:nth-child(3) {
+    border-bottom: dashed 2px var(--game-board-color);
+    border-left: dashed 2px var(--game-board-color);
+}
+
+#game-board div:nth-child(5) {
+    outline: dashed 2px var(--game-board-color);
+}
+
+#game-board div:nth-child(7) {
+    border-top: dashed 2px var(--game-board-color);
+    border-right: dashed 2px var(--game-board-color);
+}
+
+#game-board div:nth-child(9) {
+    border-top: dashed 2px var(--game-board-color);
+    border-left: dashed 2px var(--game-board-color);
 }
 
 .O div,
-.X div {
+.X div,
+.tie div {
     position: relative;
-    background-color: darkseagreen;
     opacity: .25;
+}
+
+.O div {
+    background-color: darkseagreen;
+}
+
+.X div {
+    background-color: rebeccapurple;
+}
+
+.tie div {
+    background-color: wheat;
 }
 
 .O::after {
     position: absolute;
     content: 'O Wins!';
     font-size: 22px;
-    
-    
+}
+
+.X::after {
+    position: absolute;
+    content: 'X Wins!';
+    font-size: 22px;
+}
+
+.tie::after { 
+    position: absolute;
+    content: 'Tie Game!';
+    font-size: 22px;
+}
+
+.made-by {
+    font-family: "Lato", sans-serif;
+    color: #343633;
+    grid-area: 3 / 1 / 4 / 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.made-by a {
+    text-decoration: none;
+    color: #2b1719;
+}
+
+.made-by img {
+    height: 16px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.made-by img:hover {
+    transform: rotate(-360deg) scale(1.2);
 }

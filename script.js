@@ -32,8 +32,7 @@ const gameFlow = (() => {
         } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
             whoIsWinner(check[2]);
         } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
-            console.log('Tie Game!');
-            displayController.clearBoard()
+            whoIsWinner('tie');
         } else {
             console.log('no winner yet');
         }
@@ -41,7 +40,10 @@ const gameFlow = (() => {
     }
 
     const whoIsWinner = (gamePiece) => {
-        if (gamePiece === player1.marker) {
+        if (gamePiece === 'tie') {
+            console.log('Tie game!');
+            displayController.displayWinner('tie');
+        } else if (gamePiece === player1.marker) {
             console.log(player1.name + ' wins!');
             displayController.displayWinner(player1.marker);
             // displayController.clearBoard();
