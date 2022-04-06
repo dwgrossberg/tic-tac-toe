@@ -101,6 +101,10 @@ body {
     justify-content: center;
 }
 
+#game-board img {
+    height: 25px;
+}
+
 #game-board div:hover {
     background-color: ghostwhite;
     padding: 10px;

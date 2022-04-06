@@ -59,10 +59,7 @@ const gameFlow = (() => {
     
 
     return {
-        checkForWinner,
-        player1Score,
-        player2Score
-        
+        checkForWinner
     }
 })();
 
@@ -83,13 +80,14 @@ const displayController = (() => {
     const addGamePiece = (e) => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
+        let gamePieceDOM = document.querySelector(`div[data-id="${gamePieceID}"]`);
         if (counter % 2 === 0 && gamePiece.innerText === '') {
             gameBoard.inputMove(player1.marker, gamePieceID);
-            gamePiece.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
+            gamePiece.appendChild(player1.icon);
             counter++;
         } else if (counter % 2 !== 0 && gamePiece.innerText === '') {
             gameBoard.inputMove(player2.marker, gamePieceID);
-            gamePiece.innerText = gameBoard.gameBoardArray[gamePieceID - 1];
+            gamePiece.appendChild(player2.icon);
             counter++;
         }
     }
@@ -101,7 +99,6 @@ const displayController = (() => {
         const player2ScoreDOM = document.getElementById('score2');
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
-        console.log(gameFlow.player1Score, gameFlow.player2Score);
     }
     const displayWinner = (winner) => {
         gameBoardDOM.classList.add(winner);
@@ -136,15 +133,20 @@ displayController.displayToDOM();
 displayController.addMark();
 
 const Player = (gamePiece) => {
-   const marker = gamePiece;
-   const name = `Player ${gamePiece}`; 
+    const marker = gamePiece;
+    const name = `Player ${gamePiece}`;
+    let img = document.createElement('img');
+    img.src = `img/Player${gamePiece}.png`;
+    const icon = img;
 
     return {
         marker,
-        name
+        name,
+        icon
     };
 };
 
 const player1 = Player('O');
 const player2 = Player('X');
 
+console.log(player1.icon);
