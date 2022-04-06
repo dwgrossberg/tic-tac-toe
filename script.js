@@ -80,14 +80,16 @@ const displayController = (() => {
     const addGamePiece = (e) => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
-        let gamePieceDOM = document.querySelector(`div[data-id="${gamePieceID}"]`);
+        let img = document.createElement('img');
         if (counter % 2 === 0 && gamePiece.innerText === '') {
             gameBoard.inputMove(player1.marker, gamePieceID);
-            gamePiece.appendChild(player1.icon);
+            img.src = player1.icon;
+            gamePiece.appendChild(img);
             counter++;
         } else if (counter % 2 !== 0 && gamePiece.innerText === '') {
             gameBoard.inputMove(player2.marker, gamePieceID);
-            gamePiece.appendChild(player2.icon);
+            img.src = player2.icon;
+            gamePiece.appendChild(img);
             counter++;
         }
     }
@@ -135,9 +137,7 @@ displayController.addMark();
 const Player = (gamePiece) => {
     const marker = gamePiece;
     const name = `Player ${gamePiece}`;
-    let img = document.createElement('img');
-    img.src = `img/Player${gamePiece}.png`;
-    const icon = img;
+    const icon = `img/Player${gamePiece}.png`;
 
     return {
         marker,
@@ -149,4 +149,3 @@ const Player = (gamePiece) => {
 const player1 = Player('O');
 const player2 = Player('X');
 
-console.log(player1.icon);
