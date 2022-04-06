@@ -56,10 +56,15 @@ const gameFlow = (() => {
             console.log(player2.name + ' wins!', player2Score);
         }
     }
+    const resetScore = () => {
+        player1Score = 0;
+        player2Score = 0;
+    }
     
 
     return {
-        checkForWinner
+        checkForWinner,
+        resetScore
     }
 })();
 
@@ -81,12 +86,12 @@ const displayController = (() => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
-        if (counter % 2 === 0 && gamePiece.innerText === '') {
+        if (counter % 2 === 0 && !gamePiece.firstChild) {
             gameBoard.inputMove(player1.marker, gamePieceID);
             img.src = player1.icon;
             gamePiece.appendChild(img);
             counter++;
-        } else if (counter % 2 !== 0 && gamePiece.innerText === '') {
+        } else if (counter % 2 !== 0 && !gamePiece.firstChild) {
             gameBoard.inputMove(player2.marker, gamePieceID);
             img.src = player2.icon;
             gamePiece.appendChild(img);
@@ -95,6 +100,28 @@ const displayController = (() => {
     }
     const addMark = () => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
+    }
+    const updatePlayerName = () => {
+        const player1Name = document.getElementById('player1-name');
+        const player2Name = document.getElementById('player2-name');
+        // mutation observer to watch for changes to playerNames
+        const config = { characterData: true, attributes: false, childList: false, subtree: true };
+        const callback = function(mutationsList, observer) {
+            for(const mutation of mutationsList) {
+                console.log(mutation.target.textContent);
+                if (mutation.type === 'childList') {
+                    console.log('A child node has been added or removed.');
+                } else if (mutation.type === 'attributes') {
+                    console.log('The ' + mutation.attributeName + ' attribute was modified.');
+                } else {
+                    console.log('The mutation type was ' + mutation.type + '.');
+                }
+            }
+        }
+        const observer = new MutationObserver(callback);
+        observer.observe(player1Name, config);
+        observer.observe(player2Name, config);
+
     }
     const updateScore = (player1Score, player2Score) => {
         const player1ScoreDOM = document.getElementById('score1');
@@ -124,7 +151,11 @@ const displayController = (() => {
     }
     const reset = () => {
         const resetDOM = document.getElementById('reset');
-        resetDOM.addEventListener('mousedown', clearBoard);
+        resetDOM.addEventListener('mousedown', () => {
+            gameFlow.resetScore();
+            updateScore(0, 0);
+            clearBoard();
+        });
     }
 
     return {
@@ -132,6 +163,7 @@ const displayController = (() => {
         addMark,
         displayWinner,
         updateScore,
+        updatePlayerName,
         reset
     }
 })();
@@ -139,6 +171,7 @@ const displayController = (() => {
 displayController.displayToDOM();
 displayController.addMark();
 displayController.reset();
+displayController.updatePlayerName();
 
 const Player = (gamePiece) => {
     const marker = gamePiece;
