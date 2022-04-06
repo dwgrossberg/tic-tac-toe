@@ -1,3 +1,34 @@
+
+
+const Player = (gamePiece) => {
+    const marker = gamePiece;
+    const name = `Player ${gamePiece}`;
+    const setName = (newName, oldName) => {
+        const player1Name = document.getElementById('player-O-name');
+        const player2Name = document.getElementById('player-X-name');
+        if (oldName === 'Player O') {
+            player1Name.innerText = newName;
+            player1.name = newName;
+        } else if (oldName === 'Player X') {
+            player2Name.innerText = newName;
+            player2.name = newName;
+        }
+    }
+    const icon = `img/Player${gamePiece}.png`;
+
+    return {
+        marker,
+        name,
+        setName,
+        icon
+    };
+};
+
+const player1 = Player('O');
+const player2 = Player('X');
+
+
+
 const gameBoard = (() => {
     let gameBoardArray = ['', '', '', '', '', '', '', '', '']
     const inputMove = (marker, space) => {
@@ -71,13 +102,15 @@ const gameFlow = (() => {
 const displayController = (() => {
     const gameBoardDOM = document.getElementById('game-board');
     const displayToDOM = () => {
+        player1.setName('Player O', 'Player O');
+        player2.setName('Player X', 'Player X');
+        updateScore(0, 0);
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
             let gamePiece = document.createElement('div');
             gamePiece.classList.add('game-piece');
             gamePiece.dataset.id = `${i + 1}`
             gamePiece.innerText = gameBoard.gameBoardArray[i];
             gameBoardDOM.appendChild(gamePiece);
-            updateScore(0, 0);
         }
     }
     const gamePieces = document.getElementsByClassName('game-piece');
@@ -102,19 +135,17 @@ const displayController = (() => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
     }
     const updatePlayerName = () => {
-        const player1Name = document.getElementById('player1-name');
-        const player2Name = document.getElementById('player2-name');
+        const player1Name = document.getElementById('player-O-name');
+        const player2Name = document.getElementById('player-X-name');
         // mutation observer to watch for changes to playerNames
         const config = { characterData: true, attributes: false, childList: false, subtree: true };
         const callback = function(mutationsList, observer) {
             for(const mutation of mutationsList) {
-                console.log(mutation.target.textContent);
-                if (mutation.type === 'childList') {
-                    console.log('A child node has been added or removed.');
-                } else if (mutation.type === 'attributes') {
-                    console.log('The ' + mutation.attributeName + ' attribute was modified.');
-                } else {
-                    console.log('The mutation type was ' + mutation.type + '.');
+                console.log(mutation.target.parentNode.id, mutation.target.textContent);
+                if (mutation.target.parentNode.id === 'player-O-name') {
+                    player1.setName(mutation.target.textContent, 'Player O');
+                } else if (mutation.target.parentNode.id === 'player-X-name') {
+                    player1.setName(mutation.target.textContent, 'Player X');
                 }
             }
         }
@@ -173,18 +204,25 @@ displayController.addMark();
 displayController.reset();
 displayController.updatePlayerName();
 
-const Player = (gamePiece) => {
-    const marker = gamePiece;
-    const name = `Player ${gamePiece}`;
-    const icon = `img/Player${gamePiece}.png`;
 
-    return {
-        marker,
-        name,
-        icon
-    };
-};
 
-const player1 = Player('O');
-const player2 = Player('X');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
