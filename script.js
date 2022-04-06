@@ -3,14 +3,21 @@
 const Player = (gamePiece) => {
     const marker = gamePiece;
     const name = `Player ${gamePiece}`;
+    const player1Name = document.getElementById('player-O-name');
+    const player2Name = document.getElementById('player-X-name');
     const setName = (newName, oldName) => {
-        const player1Name = document.getElementById('player-O-name');
-        const player2Name = document.getElementById('player-X-name');
         if (oldName === 'Player O') {
             player1Name.innerText = newName;
             player1.name = newName;
         } else if (oldName === 'Player X') {
             player2Name.innerText = newName;
+            player2.name = newName;
+        }
+    }
+    const updatePlayerName = (newName, oldName) => {
+        if (oldName === 'Player O') {
+            player1.name = newName;
+        } else if (oldName === 'Player X') {
             player2.name = newName;
         }
     }
@@ -20,6 +27,7 @@ const Player = (gamePiece) => {
         marker,
         name,
         setName,
+        updatePlayerName,
         icon
     };
 };
@@ -139,10 +147,10 @@ const displayController = (() => {
         const player2Name = document.getElementById('player-X-name');
         const playerNames = [player1Name, player2Name];
         // set cursor to end of textContent while editing in browser
-        playerNames.forEach(player => player.addEventListener('input', (e) => {
+        playerNames.forEach(player => player.addEventListener('input', () => {
             let content = player.innerText.replace(/(\*\*|__)(.*?)\1/g, "<strong>$2</strong>");
             player.innerText = content;
-            var range = document.createRange(),
+            const range = document.createRange(),
             sel = window.getSelection();
             range.setStart(player.childNodes[0], content.length);
             range.collapse(true);
@@ -150,15 +158,14 @@ const displayController = (() => {
             sel.addRange(range);
         }));
         // mutation observer to watch for changes to playerNames
-        const config = { characterData: true, attributes: false, childList: false, subtree: true };
+        const config = { characterData: true, attributes: true, childList: true, subtree: true };
         const callback = function(mutationsList, observer) {
             for(const mutation of mutationsList) {
-                console.log(mutationsList);
-                console.log(mutation.target.parentElement.id, mutation.target.textContent);
-                if (mutation.target.parentNode.id === 'player-O-name') {
-                    player1.setName(mutation.target.textContent, 'Player O');
-                } else if (mutation.target.parentNode.id === 'player-X-name') {
-                    player1.setName(mutation.target.textContent, 'Player X');
+                console.log(mutation.target.id, mutation.target.textContent);
+                if (mutation.target.id === 'player-O-name') {
+                    player1.updatePlayerName(mutation.target.textContent, 'Player O');
+                } else if (mutation.target.id === 'player-X-name') {
+                    player1.updatePlayerName(mutation.target.textContent, 'Player X');
                 }
             }
         }
