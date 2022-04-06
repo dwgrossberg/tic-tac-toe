@@ -122,17 +122,23 @@ const displayController = (() => {
             addMark();
         }, {once : true});
     }
+    const reset = () => {
+        const resetDOM = document.getElementById('reset');
+        resetDOM.addEventListener('mousedown', clearBoard);
+    }
 
     return {
         displayToDOM,
         addMark,
         displayWinner,
-        updateScore
+        updateScore,
+        reset
     }
 })();
 
 displayController.displayToDOM();
 displayController.addMark();
+displayController.reset();
 
 const Player = (gamePiece) => {
     const marker = gamePiece;

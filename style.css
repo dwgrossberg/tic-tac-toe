@@ -41,7 +41,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 100px;
+    gap: 50px;
 }
 
 .player1,
@@ -61,7 +61,7 @@ body {
 
 .player1 img,
 .player2 img {
-    height: 50px;
+    height: 45px;
     border-radius: 50%;
 }
 
@@ -82,6 +82,18 @@ body {
     width: 75px;
     text-align: center;
     font-size: 14px;
+}
+
+#reset {
+    width: 70px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: gold;
+    border-radius: 5px;
+    font-family: "Lato", sans-serif;
+    font-size: 12px;
 }
 
 #game-board {
