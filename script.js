@@ -137,11 +137,24 @@ const displayController = (() => {
     const updatePlayerName = () => {
         const player1Name = document.getElementById('player-O-name');
         const player2Name = document.getElementById('player-X-name');
+        const playerNames = [player1Name, player2Name];
+        // set cursor to end of textContent while editing in browser
+        playerNames.forEach(player => player.addEventListener('input', (e) => {
+            let content = player.innerText.replace(/(\*\*|__)(.*?)\1/g, "<strong>$2</strong>");
+            player.innerText = content;
+            var range = document.createRange(),
+            sel = window.getSelection();
+            range.setStart(player.childNodes[0], content.length);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }));
         // mutation observer to watch for changes to playerNames
         const config = { characterData: true, attributes: false, childList: false, subtree: true };
         const callback = function(mutationsList, observer) {
             for(const mutation of mutationsList) {
-                console.log(mutation.target.parentNode.id, mutation.target.textContent);
+                console.log(mutationsList);
+                console.log(mutation.target.parentElement.id, mutation.target.textContent);
                 if (mutation.target.parentNode.id === 'player-O-name') {
                     player1.setName(mutation.target.textContent, 'Player O');
                 } else if (mutation.target.parentNode.id === 'player-X-name') {
