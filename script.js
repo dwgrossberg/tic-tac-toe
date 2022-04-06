@@ -38,25 +38,30 @@ const gameFlow = (() => {
         }
  
     }
-
+    let player1Score = 0;
+    let player2Score = 0;
     const whoIsWinner = (gamePiece) => {
         if (gamePiece === 'tie') {
             console.log('Tie game!');
             displayController.displayWinner('tie');
         } else if (gamePiece === player1.marker) {
-            console.log(player1.name + ' wins!');
             displayController.displayWinner(player1.marker);
-            // displayController.clearBoard();
+            player1Score += 1;
+            displayController.updateScore(player1Score, player2Score);
+            console.log(player1.name + ' wins!', player1Score);
         } else {
-            console.log(player2.name + ' wins!');
             displayController.displayWinner(player2.marker);
-            // displayController.clearBoard();
+            player2Score += 1;
+            displayController.updateScore(player1Score, player2Score);
+            console.log(player2.name + ' wins!', player2Score);
         }
     }
     
 
     return {
-        checkForWinner
+        checkForWinner,
+        player1Score,
+        player2Score
         
     }
 })();
@@ -70,6 +75,7 @@ const displayController = (() => {
             gamePiece.dataset.id = `${i + 1}`
             gamePiece.innerText = gameBoard.gameBoardArray[i];
             gameBoardDOM.appendChild(gamePiece);
+            updateScore(0, 0);
         }
     }
     const gamePieces = document.getElementsByClassName('game-piece');
@@ -90,12 +96,18 @@ const displayController = (() => {
     const addMark = () => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
     }
+    const updateScore = (player1Score, player2Score) => {
+        const player1ScoreDOM = document.getElementById('score1');
+        const player2ScoreDOM = document.getElementById('score2');
+        player1ScoreDOM.innerText = player1Score;
+        player2ScoreDOM.innerText = player2Score;
+        console.log(gameFlow.player1Score, gameFlow.player2Score);
+    }
     const displayWinner = (winner) => {
         gameBoardDOM.classList.add(winner);
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
-
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
             let winner = gameBoardDOM.classList[0];
@@ -107,6 +119,7 @@ const displayController = (() => {
                 div.innerText = '';
             });
             console.log(gameBoard.gameBoardArray);
+            counter = 0;
             addMark();
         }, {once : true});
     }
@@ -114,7 +127,8 @@ const displayController = (() => {
     return {
         displayToDOM,
         addMark,
-        displayWinner
+        displayWinner,
+        updateScore
     }
 })();
 
