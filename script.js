@@ -164,9 +164,9 @@ const displayController = (() => {
         observer.observe(player1Name, config);
         observer.observe(player2Name, config);
     }
+    const player1Icon = document.getElementById('player-O-icon');
+    const player2Icon = document.getElementById('player-X-icon');
     const updatePlayerIcon = () => {
-        const player1Icon = document.getElementById('player-O-icon');
-        const player2Icon = document.getElementById('player-X-icon');
         const player1IconOptions = document.getElementById('player-O-icon-options');
         const player2IconOptions = document.getElementById('player-X-icon-options');
         const player1IconImgs = document.getElementsByClassName('player-O-icon-imgs');
@@ -189,11 +189,13 @@ const displayController = (() => {
         // Update the Player object new icon value
         Array.from(player1IconImgs).forEach(img => img.addEventListener('mousedown', () => {
             let newSrc = img.src;
+            img.src = player1.icon;
             player1.icon = newSrc;
             player1Icon.src = newSrc;
         }));
         Array.from(player2IconImgs).forEach(img => img.addEventListener('mousedown', () => {
             let newSrc = img.src;
+            img.src = player2.icon;
             player2.icon = newSrc;
             player2Icon.src = newSrc;
         }));
@@ -231,6 +233,12 @@ const displayController = (() => {
             gameFlow.resetScore();
             updateScore(0, 0);
             clearBoard();
+            player1.setName('Player O', 'Player O');
+            player2.setName('Player X', 'Player X');
+            player1.icon = 'img/PlayerO.png';
+            player1Icon.src = 'img/PlayerO.png';
+            player2.icon = 'img/PlayerX.png';
+            player2Icon.src = 'img/PlayerX.png';
         });
     }
 

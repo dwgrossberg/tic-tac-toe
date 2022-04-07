@@ -34,7 +34,7 @@ body {
     font-family: 'Chakra Petch', sans-serif;
     font-size: 46px;
     font-weight: 500;
-    margin-bottom: -10px;
+    margin-bottom: -15px;
 }
 
 .header-middle {
@@ -43,7 +43,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 150px;
-    margin-top: -10px;
+    margin-top: -5px;
 }
 
 #player-O-icon-options,
@@ -55,7 +55,7 @@ body {
     height: 30px;
     background-color: cornsilk;
     border-radius: 5px;
-    opacity: 1;
+    opacity: 0;
 }
 
 #player-O-icon-options img,
