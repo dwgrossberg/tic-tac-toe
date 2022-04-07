@@ -163,6 +163,29 @@ const displayController = (() => {
         const observer = new MutationObserver(callback);
         observer.observe(player1Name, config);
         observer.observe(player2Name, config);
+    }
+    const updatePlayerIcon = () => {
+        const player1Icon = document.getElementById('player-O-icon');
+        const player2Icon = document.getElementById('player-X-icon');
+        const player1IconOptions = document.getElementById('player-O-icon-options');
+        const player2IconOptions = document.getElementById('player-X-icon-options');
+        player1Icon.addEventListener('mousedown', () => {
+            if (player1IconOptions.style.opacity === '') {
+                player1IconOptions.style.opacity = '1';
+            } else {
+                player1IconOptions.style.opacity = '';
+            }
+        });
+        player2Icon.addEventListener('mousedown', () => {
+            if (player2IconOptions.style.opacity === '') {
+                player2IconOptions.style.opacity = '1';
+            } else {
+                player2IconOptions.style.opacity = '';
+            }
+        });
+        
+        
+        
 
     }
     const updateScore = (player1Score, player2Score) => {
@@ -206,6 +229,7 @@ const displayController = (() => {
         displayWinner,
         updateScore,
         updatePlayerName,
+        updatePlayerIcon,
         reset
     }
 })();
@@ -214,6 +238,7 @@ displayController.displayToDOM();
 displayController.addMark();
 displayController.reset();
 displayController.updatePlayerName();
+displayController.updatePlayerIcon();
 
 
 
