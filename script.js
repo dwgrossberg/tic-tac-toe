@@ -246,8 +246,8 @@ const displayController = (() => {
             if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
                 piece.style.opacity = '1';
             } else {
-                piece.style.opacity = '.25';
-                // piece.style.backgroundColor = 'rgba(0, 0, 0, 0.1';
+                // piece.style.opacity = '.25';
+                piece.style.backgroundColor = 'rgba(122, 115, 117, .3)';
             }
         });
     }
@@ -263,6 +263,7 @@ const displayController = (() => {
             });
             Array.from(gamePieces).forEach(piece => {
                 piece.style.opacity = '1';
+                piece.style.backgroundColor = '';
             });
             console.log(gameBoard.gameBoardArray);
             header.classList.remove('tie');
