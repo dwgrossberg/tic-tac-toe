@@ -169,6 +169,9 @@ const displayController = (() => {
         const player2Icon = document.getElementById('player-X-icon');
         const player1IconOptions = document.getElementById('player-O-icon-options');
         const player2IconOptions = document.getElementById('player-X-icon-options');
+        const player1IconImgs = document.getElementsByClassName('player-O-icon-imgs');
+        const player2IconImgs = document.getElementsByClassName('player-X-icon-imgs');
+        // Add pop-up window to display new icon options
         player1Icon.addEventListener('mousedown', () => {
             if (player1IconOptions.style.opacity === '') {
                 player1IconOptions.style.opacity = '1';
@@ -183,9 +186,17 @@ const displayController = (() => {
                 player2IconOptions.style.opacity = '';
             }
         });
-        
-        
-        
+        // Update the Player object new icon value
+        Array.from(player1IconImgs).forEach(img => img.addEventListener('mousedown', () => {
+            let newSrc = img.src;
+            player1.icon = newSrc;
+            player1Icon.src = newSrc;
+        }));
+        Array.from(player2IconImgs).forEach(img => img.addEventListener('mousedown', () => {
+            let newSrc = img.src;
+            player2.icon = newSrc;
+            player2Icon.src = newSrc;
+        }));
 
     }
     const updateScore = (player1Score, player2Score) => {

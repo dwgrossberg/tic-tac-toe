@@ -20,7 +20,7 @@ body {
 .header {
     grid-area: 1 / 1 / 2 / 2;
     display: grid;
-    grid-template: 1fr 0px 1fr / 1fr;
+    grid-template: 1fr 10px 1fr / 1fr;
     background-color: darksalmon;
     width: 100%;
     height: 100%;
@@ -34,7 +34,7 @@ body {
     font-family: 'Chakra Petch', sans-serif;
     font-size: 46px;
     font-weight: 500;
-    margin-bottom: -15px;
+    margin-bottom: -10px;
 }
 
 .header-middle {
@@ -49,11 +49,18 @@ body {
 #player-O-icon-options,
 #player-X-icon-options {
     display: flex;
+    justify-content: space-around;
+    align-items: center;
     width: 175px;
-    height: 25px;
+    height: 30px;
     background-color: cornsilk;
     border-radius: 5px;
-    opacity: 0;
+    opacity: 1;
+}
+
+#player-O-icon-options img,
+#player-X-icon-options img {
+    height: 75%;
 }
 
 .header-bottom {
@@ -62,7 +69,7 @@ body {
     justify-content: center;
     align-items: center;
     gap: 40px;
-    margin-top: -10px;
+    margin-top: -5px;
 }
 
 .player1,
@@ -88,6 +95,7 @@ body {
 
 .score {
     font-size: 34px;
+    width: 25px;
 }
 
 .profile {
