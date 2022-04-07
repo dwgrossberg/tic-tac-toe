@@ -209,32 +209,21 @@ const displayController = (() => {
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
     }
-    const winnerDiv = document.getElementById('winner');
+    const header = document.getElementById('header');
     const pWinner = document.createElement('p');
     pWinner.setAttribute('id', 'p-winner');
     const displayWinner = (winner) => {
+        const winnerDiv = document.getElementById('winner');
         gameBoardDOM.classList.add(winner);
         if (winner === 'O') {
             pWinner.innerText = player1.name + ' wins!';
-            if (player1.icon === 'img/PlayerO.png') {
-                gameBoardDOM.classList.add(player1.icon);
-            } else { //account for the local file path name of optional icons by slicing
-                gameBoardDOM.classList.add(player1.icon.slice(27)); 
-            }
+            header.style.backgroundImage = 'url(' + player1.icon + ')';
         } else if (winner === 'X') {
             pWinner.innerText = player2.name + ' wins!';
-            if (player2.icon === 'img/PlayerX.png') {
-                gameBoardDOM.classList.add(player2.icon);
-            } else {
-                gameBoardDOM.classList.add(player2.icon.slice(27));
-            }
+            header.style.backgroundImage = 'url(' + player2.icon + ')';
         } else if (winner === 'tie') {
             pWinner.innerText = 'Tie game!';
-            if (player1.icon === 'img/PlayerO.png' || player2.icon === 'img/PlayerX.png') {
-                gameBoardDOM.classList.add(player1.icon, player2.icon);
-            } else {
-                gameBoardDOM.classList.add(player1.icon.slice(27), player2.icon.slice(27));
-            }
+            header.style.backgroundImage = 'url(img/tie.png)';            
         }
         winnerDiv.appendChild(pWinner);
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
@@ -252,6 +241,7 @@ const displayController = (() => {
                 div.innerText = '';
             });
             console.log(gameBoard.gameBoardArray);
+            header.classList.remove('tie');
             counter = 0;
             addMark();
         }, {once : true});
@@ -262,6 +252,7 @@ const displayController = (() => {
             gameFlow.resetScore();
             updateScore(0, 0);
             clearBoard();
+            header.style.backgroundImage = '';
             player1.setName('Player O', 'Player O');
             player2.setName('Player X', 'Player X');
             player1.icon = 'img/PlayerO.png';

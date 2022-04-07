@@ -9,21 +9,27 @@ body {
     box-sizing: border-box;
 }
 
-.container {
+body {
+    height: 100vh;
+}
+
+#container {
     display: grid;
     grid-template: 200px 1fr 50px 100px / 1fr;
     place-items: center;
     width: 100vw;
-    height: 100vh;
+    height: 100%;
 }
 
-.header {
+#header {
     grid-area: 1 / 1 / 2 / 2;
     display: grid;
     grid-template: 1fr 10px 1fr / 1fr;
     background-color: darksalmon;
     width: 100%;
     height: 100%;
+    background-repeat: repeat;
+    background-size: 30px;
 }
 
 .header-top {
