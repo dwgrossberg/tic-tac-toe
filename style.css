@@ -1,5 +1,5 @@
 :root {
-    --game-board-color: purple;
+    --game-board-color: #8638A8;
 }
 
 *,
@@ -19,13 +19,13 @@ body {
     place-items: center;
     width: 100vw;
     height: 100%;
+    background-color: #F5F5F5;
 }
 
 #header {
     grid-area: 1 / 1 / 2 / 2;
     display: grid;
     grid-template: 1fr 10px 1fr / 1fr;
-    background-color: lightyellow;
     width: 100%;
     height: 100%;
     background-repeat: repeat;
@@ -44,9 +44,11 @@ body {
 }
 
 .header-top p {
-    background-color: lightyellow;
+    background-color: #F5F5F5;
     padding: 10px 20px;
     border-radius: 7px;
+    color: #201D1E;
+    text-shadow: 1px 1px #7A7375;
 }
 
 .header-middle {
@@ -65,7 +67,7 @@ body {
     align-items: center;
     width: 175px;
     height: 30px;
-    background-color: cornsilk;
+    background-color: #F2FCEE;
     border-radius: 5px;
     opacity: 0;
 }
@@ -73,6 +75,12 @@ body {
 #player-O-icon-options img,
 #player-X-icon-options img {
     height: 75%;
+}
+
+#player-O-icon-options img:hover,
+#player-X-icon-options img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 .header-bottom {
@@ -94,15 +102,21 @@ body {
     gap: 10px;
     padding: 10px;
     font-family: 'Chakra Petch', sans-serif;
-    background-color: wheat;
+    background-color: #D3F5C4;
     border-radius: 7px;
-
+    color: #201D1E;
+    box-shadow: .5px .5px #7A7375;
 }
 
 .player1 img,
 .player2 img {
     height: 45px;
-    border-radius: 50%;
+}
+
+.player1 img:hover,
+.player2 img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
 }
 
 .score {
@@ -132,8 +146,8 @@ body {
     white-space: normal;
     overflow: auto;
     outline: none;    
-    background-color: beige;
-    border: dotted 1px black;
+    background-color: #F2FCEE;
+    border: dotted 1px #7A7375;
     border-radius: 5px;
 }
 
@@ -143,18 +157,27 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: gold;
+    background-color: #1E8566;
     border-radius: 5px;
     font-family: "Lato", sans-serif;
     font-size: 12px;
+    color: white;
+    box-shadow: .5px .5px #7A7375;
+}
+
+#reset:hover {
+    text-decoration: underline;
+    text-shadow: 1px 1px #7A7375;
+    cursor: pointer;
+    transform: scale(1.01);
 }
 
 #game-board {
     grid-area: 2 / 1 / 3 / 2;
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
-    width: 300px;
-    height: 300px;
+    width: 325px;
+    height: 325px;
     margin-top: 30px;
 }
 
@@ -171,48 +194,47 @@ body {
 }
 
 #game-board div:hover {
-    background-color: ghostwhite;
-    padding: 10px;
+    background-color: #EEE0F5;
 }
 
 #game-board div:nth-child(1) {
-    border-bottom: solid 2px var(--game-board-color);
-    border-right: solid 2px var(--game-board-color);
+    border-bottom: solid 5px var(--game-board-color);
+    border-right: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(2) {
-    border-bottom: solid 2px var(--game-board-color);
+    border-bottom: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(3) {
-    border-bottom: solid 2px var(--game-board-color);
-    border-left: solid 2px var(--game-board-color);
+    border-bottom: solid 5px var(--game-board-color);
+    border-left: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(4) {
-    border-right: solid 2px var(--game-board-color);
+    border-right: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(5) {
-    outline: solid 2px var(--game-board-color);
+    outline: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(6) {
-    border-left: solid 2px var(--game-board-color);
+    border-left: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(7) {
-    border-top: solid 2px var(--game-board-color);
-    border-right: solid 2px var(--game-board-color);
+    border-top: solid 5px var(--game-board-color);
+    border-right: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(8) {
-    border-top: solid 2px var(--game-board-color);
+    border-top: solid 5px var(--game-board-color);
 }
 
 #game-board div:nth-child(9) {
-    border-top: solid 2px var(--game-board-color);
-    border-left: solid 2px var(--game-board-color);
+    border-top: solid 5px var(--game-board-color);
+    border-left: solid 5px var(--game-board-color);
 }
 
 .O img,
@@ -240,7 +262,7 @@ body {
 
 .made-by {
     font-family: "Lato", sans-serif;
-    color: #343633;
+    color: #201D1E;
     grid-area: 4 / 1 / 5 / 2;
     display: flex;
     flex-direction: row;

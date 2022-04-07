@@ -246,13 +246,10 @@ const displayController = (() => {
             if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
                 piece.style.opacity = '1';
             } else {
-                piece.style.opacity = '.5';
+                piece.style.opacity = '.25';
+                // piece.style.backgroundColor = 'rgba(0, 0, 0, 0.1';
             }
         });
-        
-        
-
-
     }
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
