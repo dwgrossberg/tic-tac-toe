@@ -208,36 +208,23 @@ body {
 .tie div {
     position: relative;
     opacity: .25;
-}
-
-.O div {
-    background-color: darkseagreen;
-}
-
-.X div {
-    background-color: rebeccapurple;
-}
-
-.tie div {
-    background-color: wheat;
+    background-color: ghostwhite;
 }
 
 .O::after {
-    position: absolute;
-    content: 'O Wins!';
-    font-size: 22px;
+    
+    
+    
 }
 
 .X::after {
-    position: absolute;
-    content: 'X Wins!';
-    font-size: 22px;
+    
+    
+    
 }
 
 .tie::after { 
-    position: absolute;
-    content: 'Tie Game!';
-    font-size: 22px;
+        
 }
 
 .made-by {

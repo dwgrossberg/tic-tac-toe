@@ -192,12 +192,14 @@ const displayController = (() => {
             img.src = player1.icon;
             player1.icon = newSrc;
             player1Icon.src = newSrc;
+            player1IconOptions.style.opacity = '';
         }));
         Array.from(player2IconImgs).forEach(img => img.addEventListener('mousedown', () => {
             let newSrc = img.src;
             img.src = player2.icon;
             player2.icon = newSrc;
             player2Icon.src = newSrc;
+            player2IconOptions.style.opacity = '';
         }));
 
     }
@@ -207,15 +209,32 @@ const displayController = (() => {
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
     }
+    let pWinner = document.createElement('p');
     const displayWinner = (winner) => {
         gameBoardDOM.classList.add(winner);
+        if (winner === 'O') {
+            pWinner.innerText = player1.name + ' wins!';
+            if (player1.icon === 'img/PlayerO.png') {
+                gameBoardDOM.classList.add(player1.icon);
+            } else {
+                gameBoardDOM.classList.add(player1.icon.slice(27));
+            }
+        } else if (winner === 'X') {
+            pWinner.innerText = player2.name + ' wins!';
+            gameBoardDOM.classList.add(player2.icon.slice(27));
+        } else if (winner === 'tie') {
+            pWinner.innerText = 'Tie game!';
+            gameBoardDOM.classList.add(player2.icon.slice(27));
+        }
+        gameBoardDOM.appendChild(pWinner);
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
-            let winner = gameBoardDOM.classList[0];
-            gameBoardDOM.classList.remove(winner);
+            console.log(gameBoardDOM.classList[0], gameBoardDOM.classList[1]);
+            gameBoardDOM.classList.remove(gameBoardDOM.classList[0], gameBoardDOM.classList[1]);
+            pWinner.remove();
             for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
                 gameBoard.gameBoardArray[i] = '';
             };
