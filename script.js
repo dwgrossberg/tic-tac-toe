@@ -54,24 +54,32 @@ const gameBoard = (() => {
 })();
 
 const gameFlow = (() => {
+    const check = gameBoard.gameBoardArray;
     const checkForWinner = () => {
-        const check = gameBoard.gameBoardArray;
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
             whoIsWinner(check[0]);
+            displayController.displayWinningPieces(0, 1, 2);
         } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
             whoIsWinner(check[3]);
+            displayController.displayWinningPieces(3, 4, 5);
         } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
             whoIsWinner(check[6]);
+            displayController.displayWinningPieces(6, 7, 8);
         } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
             whoIsWinner(check[0]);
+            displayController.displayWinningPieces(0, 3, 6);
         } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
             whoIsWinner(check[1]);
+            displayController.displayWinningPieces(1, 4, 7);
         } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
             whoIsWinner(check[2]);
+            displayController.displayWinningPieces(2, 5, 8);
         } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
             whoIsWinner(check[0]);
+            displayController.displayWinningPieces(0, 4, 8);
         } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
             whoIsWinner(check[2]);
+            displayController.displayWinningPieces(2, 4, 6);
         } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
             whoIsWinner('tie');
         } else {
@@ -211,10 +219,12 @@ const displayController = (() => {
     }
     const header = document.getElementById('header');
     const pWinner = document.createElement('p');
+    const pClickAnywhere = document.createElement('p');
     pWinner.setAttribute('id', 'p-winner');
+    pClickAnywhere.setAttribute('id', 'p-click-anywhere');
+    pClickAnywhere.innerText = '(click anywhere to play again)';
     const displayWinner = (winner) => {
         const winnerDiv = document.getElementById('winner');
-        gameBoardDOM.classList.add(winner);
         if (winner === 'O') {
             pWinner.innerText = player1.name + ' wins!';
             header.style.backgroundImage = 'url(' + player1.icon + ')';
@@ -226,22 +236,40 @@ const displayController = (() => {
             header.style.backgroundImage = 'url(img/tie.png)';            
         }
         winnerDiv.appendChild(pWinner);
+        winnerDiv.appendChild(pClickAnywhere);
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
+    const displayWinningPieces = (piece1, piece2, piece3) => {
+        Array.from(gamePieces).forEach(piece => {
+            console.log(typeof piece.dataset.id)
+            if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
+                piece.style.opacity = '1';
+            } else {
+                piece.style.opacity = '.5';
+            }
+        });
+        
+        
+
+
+    }
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
-            console.log(gameBoardDOM.classList[0], gameBoardDOM.classList[1]);
-            gameBoardDOM.classList.remove(gameBoardDOM.classList[0], gameBoardDOM.classList[1]);
             pWinner.remove();
+            pClickAnywhere.remove();
             for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
                 gameBoard.gameBoardArray[i] = '';
             };
             Array.from(gamePieces).forEach(div => {
                 div.innerText = '';
             });
+            Array.from(gamePieces).forEach(piece => {
+                piece.style.opacity = '1';
+            });
             console.log(gameBoard.gameBoardArray);
             header.classList.remove('tie');
+            header.style.backgroundImage = '';
             counter = 0;
             addMark();
         }, {once : true});
@@ -252,7 +280,6 @@ const displayController = (() => {
             gameFlow.resetScore();
             updateScore(0, 0);
             clearBoard();
-            header.style.backgroundImage = '';
             player1.setName('Player O', 'Player O');
             player2.setName('Player X', 'Player X');
             player1.icon = 'img/PlayerO.png';
@@ -266,6 +293,7 @@ const displayController = (() => {
         displayToDOM,
         addMark,
         displayWinner,
+        displayWinningPieces,
         updateScore,
         updatePlayerName,
         updatePlayerIcon,
