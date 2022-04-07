@@ -209,24 +209,34 @@ const displayController = (() => {
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
     }
-    let pWinner = document.createElement('p');
+    const winnerDiv = document.getElementById('winner');
+    const pWinner = document.createElement('p');
+    pWinner.setAttribute('id', 'p-winner');
     const displayWinner = (winner) => {
         gameBoardDOM.classList.add(winner);
         if (winner === 'O') {
             pWinner.innerText = player1.name + ' wins!';
             if (player1.icon === 'img/PlayerO.png') {
                 gameBoardDOM.classList.add(player1.icon);
-            } else {
-                gameBoardDOM.classList.add(player1.icon.slice(27));
+            } else { //account for the local file path name of optional icons by slicing
+                gameBoardDOM.classList.add(player1.icon.slice(27)); 
             }
         } else if (winner === 'X') {
             pWinner.innerText = player2.name + ' wins!';
-            gameBoardDOM.classList.add(player2.icon.slice(27));
+            if (player2.icon === 'img/PlayerX.png') {
+                gameBoardDOM.classList.add(player2.icon);
+            } else {
+                gameBoardDOM.classList.add(player2.icon.slice(27));
+            }
         } else if (winner === 'tie') {
             pWinner.innerText = 'Tie game!';
-            gameBoardDOM.classList.add(player2.icon.slice(27));
+            if (player1.icon === 'img/PlayerO.png' || player2.icon === 'img/PlayerX.png') {
+                gameBoardDOM.classList.add(player1.icon, player2.icon);
+            } else {
+                gameBoardDOM.classList.add(player1.icon.slice(27), player2.icon.slice(27));
+            }
         }
-        gameBoardDOM.appendChild(pWinner);
+        winnerDiv.appendChild(pWinner);
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
