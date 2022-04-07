@@ -17,8 +17,10 @@ const Player = (gamePiece) => {
     const updatePlayerName = (newName, oldName) => {
         if (oldName === 'Player O') {
             player1.name = newName;
+            console.log(oldName + ' updated Player name to ' + newName);
         } else if (oldName === 'Player X') {
             player2.name = newName;
+            console.log(oldName + ' updated Player name to ' + newName);
         }
     }
     const icon = `img/Player${gamePiece}.png`;
@@ -145,26 +147,15 @@ const displayController = (() => {
     const updatePlayerName = () => {
         const player1Name = document.getElementById('player-O-name');
         const player2Name = document.getElementById('player-X-name');
-        const playerNames = [player1Name, player2Name];
-        // set cursor to end of textContent while editing in browser
-        playerNames.forEach(player => player.addEventListener('input', () => {
-            let content = player.innerText.replace(/(\*\*|__)(.*?)\1/g, "<strong>$2</strong>");
-            player.innerText = content;
-            const range = document.createRange(),
-            sel = window.getSelection();
-            range.setStart(player.childNodes[0], content.length);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-        }));
+        const playerNames = [player1Name, player2Name];        
         // mutation observer to watch for changes to playerNames
         const config = { characterData: true, attributes: true, childList: true, subtree: true };
         const callback = function(mutationsList, observer) {
             for(const mutation of mutationsList) {
-                console.log(mutation.target.id, mutation.target.textContent);
-                if (mutation.target.id === 'player-O-name') {
+                console.log(mutation.target.parentNode.id, mutation.target.textContent);
+                if (mutation.target.parentNode.id === 'player-O-name') {
                     player1.updatePlayerName(mutation.target.textContent, 'Player O');
-                } else if (mutation.target.id === 'player-X-name') {
+                } else if (mutation.target.parentNode.id === 'player-X-name') {
                     player1.updatePlayerName(mutation.target.textContent, 'Player X');
                 }
             }

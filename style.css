@@ -88,9 +88,8 @@ body {
     font-size: 13px;
     word-break: break-all;
     white-space: normal;
-    overflow: scroll;
-    outline: none;
-    
+    overflow: auto;
+    outline: none;    
 }
 
 #reset {
