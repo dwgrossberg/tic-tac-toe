@@ -197,7 +197,7 @@ span::after {
     position: absolute;
     content: "";
     height: 30px;
-    width: 33px;
+    width: 38px;
     border-radius: 5px;
     background-color: #D3D2D4;
     left: 0;
@@ -209,10 +209,10 @@ input:checked + span:after {
     position: absolute;
     content: "";
     height: 30px;
-    width: 45px;
+    width: 38px;
     border-radius: 5px;
     background-color: #1E8566;
-    left: 35px;
+    left: 42px;
 }
 
 #reset {
