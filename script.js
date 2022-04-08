@@ -219,6 +219,7 @@ const displayController = (() => {
     }
     const container = document.getElementById('container');
     // const header = document.getElementById('header');
+    const r = document.querySelector(':root');
     const pWinner = document.createElement('p');
     const pClickAnywhere = document.createElement('p');
     pWinner.setAttribute('id', 'p-winner');
@@ -229,9 +230,11 @@ const displayController = (() => {
         if (winner === 'O') {
             pWinner.innerText = player1.name + ' wins!';
             container.style.backgroundImage = 'url(' + player1.icon + ')';
+            r.style.setProperty('--game-board-color', '#D3D2D4');
         } else if (winner === 'X') {
             pWinner.innerText = player2.name + ' wins!';
             container.style.backgroundImage = 'url(' + player2.icon + ')';
+            r.style.setProperty('--game-board-color', '#D3D2D4');
         } else if (winner === 'tie') {
             pWinner.innerText = 'Tie game!';
             container.style.backgroundImage = 'url(img/tie.png)';            
@@ -248,12 +251,13 @@ const displayController = (() => {
                 piece.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             } else {
                 // piece.style.opacity = '.25';
-                piece.style.backgroundColor = 'rgba(122, 115, 117, .3)';
+                piece.style.backgroundColor = 'rgba(122, 115, 117, .75)';
             }
         });
     }
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
+            r.style.setProperty('--game-board-color', '#8638A8');
             pWinner.remove();
             pClickAnywhere.remove();
             for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
