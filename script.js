@@ -217,7 +217,8 @@ const displayController = (() => {
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
     }
-    const header = document.getElementById('header');
+    const container = document.getElementById('container');
+    // const header = document.getElementById('header');
     const pWinner = document.createElement('p');
     const pClickAnywhere = document.createElement('p');
     pWinner.setAttribute('id', 'p-winner');
@@ -227,13 +228,13 @@ const displayController = (() => {
         const winnerDiv = document.getElementById('winner');
         if (winner === 'O') {
             pWinner.innerText = player1.name + ' wins!';
-            header.style.backgroundImage = 'url(' + player1.icon + ')';
+            container.style.backgroundImage = 'url(' + player1.icon + ')';
         } else if (winner === 'X') {
             pWinner.innerText = player2.name + ' wins!';
-            header.style.backgroundImage = 'url(' + player2.icon + ')';
+            container.style.backgroundImage = 'url(' + player2.icon + ')';
         } else if (winner === 'tie') {
             pWinner.innerText = 'Tie game!';
-            header.style.backgroundImage = 'url(img/tie.png)';            
+            container.style.backgroundImage = 'url(img/tie.png)';            
         }
         winnerDiv.appendChild(pWinner);
         winnerDiv.appendChild(pClickAnywhere);
@@ -244,7 +245,7 @@ const displayController = (() => {
         Array.from(gamePieces).forEach(piece => {
             console.log(typeof piece.dataset.id)
             if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
-                piece.style.opacity = '1';
+                piece.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             } else {
                 // piece.style.opacity = '.25';
                 piece.style.backgroundColor = 'rgba(122, 115, 117, .3)';
@@ -266,8 +267,8 @@ const displayController = (() => {
                 piece.style.backgroundColor = '';
             });
             console.log(gameBoard.gameBoardArray);
-            header.classList.remove('tie');
-            header.style.backgroundImage = '';
+            container.classList.remove('tie');
+            container.style.backgroundImage = '';
             counter = 0;
             addMark();
         }, {once : true});
