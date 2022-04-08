@@ -27,7 +27,7 @@ body {
 #header {
     grid-area: 1 / 1 / 2 / 2;
     display: grid;
-    grid-template: 1fr 10px 1fr / 1fr;
+    grid-template: 1fr 35px 1fr / 1fr;
     width: 100%;
     height: 100%;
     background-color: #E6D1F0;
@@ -42,16 +42,19 @@ body {
     font-family: 'Chakra Petch', sans-serif;
     font-size: 46px;
     font-weight: 500;
-    margin-bottom: -15px;
+    margin-bottom: -35px;
 }
 
 .header-top p {
     background-color: #F5F5F5;
-    padding: 10px 25px;
+    width: 325px;
+    text-align: center;
+    padding: 5px;
     border-radius: 7px;
     color: #201D1E;
     text-shadow: 1px 1px #7A7375;
     box-shadow: .5px .5px #7A7375;
+    margin-top: -15px;
 }
 
 .header-middle {
@@ -59,8 +62,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 150px;
-    margin-top: -5px;
+    gap: 160px;
 }
 
 #player-O-icon-options,
@@ -72,6 +74,7 @@ body {
     height: 30px;
     background-color: #F2FCEE;
     border-radius: 5px;
+    margin-bottom: -10px;
     opacity: 0;
 }
 
@@ -304,15 +307,15 @@ input:checked + span:after {
     grid-area: 3 / 1 / 4 / 2;
     margin-top: 25px;
     text-align: center;
+    width: 325px;
 }
 
 #p-winner {
     font-family: 'Chakra Petch', sans-serif;
     font-size: 22px;
-    margin-bottom: 5px;
     background-color: #F5F5F5;
     padding: 5px 45px;
-    border-radius: 7px;
+    border-radius: 7px 7px 0 0;
     box-shadow: .5px .5px #7A7375;
 }
 
@@ -321,7 +324,7 @@ input:checked + span:after {
     font-size: 12px;
     background-color: #F5F5F5;
     padding: 7px 45px;
-    border-radius: 7px;
+    border-radius: 0 0 7px 7px;
     box-shadow: .5px .5px #7A7375;
     font-style: italic;
 }
@@ -337,8 +340,9 @@ input:checked + span:after {
     gap: 10px;
     font-size: 12px;
     background-color: #F5F5F5;
-    padding: 7px 45px;
+    padding: 7px;
     border-radius: 7px;
+    width: 100%;
 }
 
 .made-by a {
