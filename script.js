@@ -118,11 +118,14 @@ const gameFlow = (() => {
         player1Score = 0;
         player2Score = 0;
     }
-    
+    const cpuPlay = () => {
+
+    }
 
     return {
         checkForWinner,
-        resetScore
+        resetScore,
+        cpuPlay
     }
 })();
 
@@ -160,6 +163,9 @@ const displayController = (() => {
     }
     const addMark = () => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
+    }
+    const stopMarking = () => {
+        Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
     }
     const updatePlayerName = () => {
         const player1Name = document.getElementById('player-O-name');
@@ -272,17 +278,20 @@ const displayController = (() => {
             }
         });
     }
+    const clearGamePieces = () => {
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            gameBoard.gameBoardArray[i] = '';
+        };
+        Array.from(gamePieces).forEach(div => {
+            div.innerText = '';
+        });
+    }
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
             r.style.setProperty('--game-board-color', '#8638A8');
             pWinner.remove();
             pClickAnywhere.remove();
-            for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
-                gameBoard.gameBoardArray[i] = '';
-            };
-            Array.from(gamePieces).forEach(div => {
-                div.innerText = '';
-            });
+            clearGamePieces();
             Array.from(gamePieces).forEach(piece => {
                 piece.style.opacity = '1';
                 piece.style.backgroundColor = '';
@@ -315,6 +324,9 @@ const displayController = (() => {
     const changePlayType = () => {
         playTypeButton.addEventListener('change', () => {
             if (playTypeButton.checked === true) {
+                clearGamePieces();
+                gameFlow.resetScore();
+                updateScore(0, 0);
                 player1IconOptions.style.opacity = '';
                 player2IconOptions.style.opacity = '';  
                 console.log('2-player');
@@ -327,6 +339,9 @@ const displayController = (() => {
 
             }
             else {
+                clearGamePieces();     
+                gameFlow.resetScore();
+                updateScore(0, 0);         
                 player1IconOptions.style.opacity = '';
                 player2IconOptions.style.opacity = ''; 
                 console.log('1-player');
@@ -342,6 +357,7 @@ const displayController = (() => {
     return {
         displayToDOM,
         addMark,
+        stopMarking,
         displayWinner,
         displayWinningPieces,
         updateScore,
