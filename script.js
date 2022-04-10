@@ -12,7 +12,10 @@ const Player = (gamePiece) => {
         } else if (oldName === 'Player X') {
             player2Name.innerText = newName;
             player2.name = newName; 
+            player2Name.setAttribute('contenteditable', 'true');
             player2Name.style.border = 'dotted 1px #7A7375';
+            player2Name.style.cursor = 'auto';
+            
         } else if (oldName === 'Player CPU') {
             player2Name.innerText = newName;
             player2.name = newName;
@@ -125,9 +128,9 @@ const gameFlow = (() => {
 
 const displayController = (() => {
     const gameBoardDOM = document.getElementById('game-board');
-    const displayToDOM = (player2Name) => {
+    const displayToDOM = () => {
         player1.setName('Player O', 'Player O');
-        player2.setName(player2Name, player2Name);
+        player2.setName('Player CPU', 'Player CPU');
         updateScore(0, 0);
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
             let gamePiece = document.createElement('div');
@@ -178,11 +181,11 @@ const displayController = (() => {
         observer.observe(player2Name, config);
     }
     const player1Icon = document.getElementById('player-O-icon');
-    const player2Icon = document.getElementById('player-X-icon');
+    let player2Icon;
     const playerCPUIcon = document.getElementById('player-CPU-icon');
-    const updatePlayerIcon = () => {
-        const player1IconOptions = document.getElementById('player-O-icon-options');
-        const player2IconOptions = document.getElementById('player-X-icon-options');
+    const player1IconOptions = document.getElementById('player-O-icon-options');
+    const player2IconOptions = document.getElementById('player-X-icon-options');
+    const updatePlayerIcon = () => {        
         const player1IconImgs = document.getElementsByClassName('player-O-icon-imgs');
         const player2IconImgs = document.getElementsByClassName('player-X-icon-imgs');
         // Add pop-up window to display new icon options
@@ -195,18 +198,18 @@ const displayController = (() => {
                 player1IconOptions.style.pointerEvents = 'none';     
             }
         });
-        if (player2Icon) {
-            player2Icon.addEventListener('mousedown', () => {
-                    if (player2IconOptions.style.opacity === '') {
-                        player2IconOptions.style.opacity = '1';
-                        player2IconOptions.style.pointerEvents = 'auto';     
-                    } else {
-                        player2IconOptions.style.opacity = '';
-                        player2IconImgs.style.pointerEvents = 'none';
-                        player2IconOptions.style.pointerEvents = 'auto';     
-                    }
-            });
-        }
+        playerCPUIcon.addEventListener('mousedown', (e) => {
+            if (e.target.id === 'player-X-icon') {
+                if (player2IconOptions.style.opacity === '') {
+                    player2IconOptions.style.opacity = '1';
+                    player2IconOptions.style.pointerEvents = 'auto';     
+                } else {
+                    player2IconOptions.style.opacity = '';
+                    player2IconOptions.style.pointerEvents = 'auto';     
+                }
+            }
+        });
+    
         // Update the Player object with new icon value
         Array.from(player1IconImgs).forEach(img => img.addEventListener('mousedown', () => {
             let newSrc = img.src;
@@ -297,27 +300,37 @@ const displayController = (() => {
             gameFlow.resetScore();
             updateScore(0, 0);
             clearBoard();
+            player1IconOptions.style.opacity = '';
+            player2IconOptions.style.opacity = '';
+            playTypeButton.checked = false;
             player1.setName('Player O', 'Player O');
-            player2.setName('Player X', 'Player X');
+            player2.setName('Player CPU', 'Player CPU');
             player1.icon = 'img/PlayerO.png';
             player1Icon.src = 'img/PlayerO.png';
             player2.icon = 'img/PlayerX.png';
-            player2Icon.src = 'img/PlayerX.png';
+            playerCPUIcon.src = 'img/PlayerCPU.png';
         });
     }
+    const playTypeButton = document.getElementById('checkbox');
     const changePlayType = () => {
-        const playTypeButton = document.getElementById('checkbox');
         playTypeButton.addEventListener('change', () => {
             if (playTypeButton.checked === true) {
                 console.log('2-player');
-                displayToDOM('Player X');
+                player2.setName('Player X', 'Player X');
                 playerCPUIcon.setAttribute('id', 'player-X-icon');
+                player2Icon = document.getElementById('player-X-icon');
                 playerCPUIcon.src = player2.icon;
+                playerCPUIcon.style.cursor = 'pointer';
+                playerCPUIcon.style.transform = '(scale(1.05))';
+
             }
             else {
                 console.log('1-player');
-                displayToDOM('Player CPU');
+                player2.setName('Player CPU', 'Player CPU');
                 playerCPUIcon.src = playerCPU.icon;
+                playerCPUIcon.classList.add('playerCPU');
+                playerCPUIcon.style.transform = 'none';
+
             }
         });
     }

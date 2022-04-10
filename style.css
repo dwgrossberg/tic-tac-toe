@@ -127,6 +127,11 @@ body {
     cursor: pointer;
 }
 
+.playerCPU img:hover {
+    transform: none;
+    cursor: not-allowed;
+}
+
 .score {
     font-size: 34px;
     width: 25px;
