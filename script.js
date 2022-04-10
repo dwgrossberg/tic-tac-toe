@@ -205,7 +205,7 @@ const displayController = (() => {
                     player2IconOptions.style.pointerEvents = 'auto';     
                 } else {
                     player2IconOptions.style.opacity = '';
-                    player2IconOptions.style.pointerEvents = 'auto';     
+                    player2IconOptions.style.pointerEvents = 'none';     
                 }
             }
         });
@@ -315,22 +315,26 @@ const displayController = (() => {
     const changePlayType = () => {
         playTypeButton.addEventListener('change', () => {
             if (playTypeButton.checked === true) {
+                player1IconOptions.style.opacity = '';
+                player2IconOptions.style.opacity = '';  
                 console.log('2-player');
                 player2.setName('Player X', 'Player X');
                 playerCPUIcon.setAttribute('id', 'player-X-icon');
                 player2Icon = document.getElementById('player-X-icon');
-                playerCPUIcon.src = player2.icon;
-                playerCPUIcon.style.cursor = 'pointer';
-                playerCPUIcon.style.transform = '(scale(1.05))';
+                player2Icon.style.cursor = 'pointer';
+                player2Icon.src = player2.icon;
+                player2Icon.style.pointerEvents = 'auto';     
 
             }
             else {
+                player1IconOptions.style.opacity = '';
+                player2IconOptions.style.opacity = ''; 
                 console.log('1-player');
                 player2.setName('Player CPU', 'Player CPU');
                 playerCPUIcon.src = playerCPU.icon;
                 playerCPUIcon.classList.add('playerCPU');
-                playerCPUIcon.style.transform = 'none';
-
+                playerCPUIcon.style.pointerEvents = 'none';   
+                player2IconOptions.style.pointerEvents = 'none';     
             }
         });
     }

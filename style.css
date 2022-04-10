@@ -119,17 +119,16 @@ body {
 .player1 img,
 .player2 img {
     height: 45px;
+    cursor: pointer;
+}
+
+.player2 img { 
+    cursor: not-allowed;
 }
 
 .player1 img:hover,
 .player2 img:hover {
     transform: scale(1.05);
-    cursor: pointer;
-}
-
-.playerCPU img:hover {
-    transform: none;
-    cursor: not-allowed;
 }
 
 .score {
