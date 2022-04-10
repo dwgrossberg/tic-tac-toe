@@ -179,6 +179,7 @@ const displayController = (() => {
     }
     const player1Icon = document.getElementById('player-O-icon');
     const player2Icon = document.getElementById('player-X-icon');
+    const playerCPUIcon = document.getElementById('player-CPU-icon');
     const updatePlayerIcon = () => {
         const player1IconOptions = document.getElementById('player-O-icon-options');
         const player2IconOptions = document.getElementById('player-X-icon-options');
@@ -194,16 +195,18 @@ const displayController = (() => {
                 player1IconOptions.style.pointerEvents = 'none';     
             }
         });
-        player2Icon.addEventListener('mousedown', () => {
-            if (player2IconOptions.style.opacity === '') {
-                player2IconOptions.style.opacity = '1';
-                player2IconOptions.style.pointerEvents = 'auto';     
-            } else {
-                player2IconOptions.style.opacity = '';
-                player2IconImgs.style.pointerEvents = 'none';
-                player2IconOptions.style.pointerEvents = 'auto';     
-            }
-        });
+        if (player2Icon) {
+            player2Icon.addEventListener('mousedown', () => {
+                    if (player2IconOptions.style.opacity === '') {
+                        player2IconOptions.style.opacity = '1';
+                        player2IconOptions.style.pointerEvents = 'auto';     
+                    } else {
+                        player2IconOptions.style.opacity = '';
+                        player2IconImgs.style.pointerEvents = 'none';
+                        player2IconOptions.style.pointerEvents = 'auto';     
+                    }
+            });
+        }
         // Update the Player object with new icon value
         Array.from(player1IconImgs).forEach(img => img.addEventListener('mousedown', () => {
             let newSrc = img.src;
@@ -308,12 +311,13 @@ const displayController = (() => {
             if (playTypeButton.checked === true) {
                 console.log('2-player');
                 displayToDOM('Player X');
+                playerCPUIcon.setAttribute('id', 'player-X-icon');
+                playerCPUIcon.src = player2.icon;
             }
             else {
                 console.log('1-player');
                 displayToDOM('Player CPU');
-                console.log(player2Icon.src);
-                player2Icon.src = playerCPU.icon;
+                playerCPUIcon.src = playerCPU.icon;
             }
         });
     }

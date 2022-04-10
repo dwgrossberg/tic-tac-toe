@@ -102,7 +102,7 @@ body {
 
 .player1,
 .player2 {
-    width: 175px;
+    width: 180px;
     height: 65px;
     display: flex;
     align-items: center;
