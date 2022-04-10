@@ -11,7 +11,14 @@ const Player = (gamePiece) => {
             player1.name = newName;
         } else if (oldName === 'Player X') {
             player2Name.innerText = newName;
+            player2.name = newName; 
+            player2Name.style.border = 'dotted 1px #7A7375';
+        } else if (oldName === 'Player CPU') {
+            player2Name.innerText = newName;
             player2.name = newName;
+            player2Name.removeAttribute('contenteditable');
+            player2Name.style.border = 'solid 1px #7A7375';
+            player2Name.style.cursor = 'not-allowed';
         }
     }
     const updatePlayerName = (newName, oldName) => {
@@ -36,8 +43,7 @@ const Player = (gamePiece) => {
 
 const player1 = Player('O');
 const player2 = Player('X');
-
-
+const playerCPU = Player('CPU');
 
 const gameBoard = (() => {
     let gameBoardArray = ['', '', '', '', '', '', '', '', '']
@@ -119,9 +125,9 @@ const gameFlow = (() => {
 
 const displayController = (() => {
     const gameBoardDOM = document.getElementById('game-board');
-    const displayToDOM = () => {
+    const displayToDOM = (player2Name) => {
         player1.setName('Player O', 'Player O');
-        player2.setName('Player X', 'Player X');
+        player2.setName(player2Name, player2Name);
         updateScore(0, 0);
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
             let gamePiece = document.createElement('div');
@@ -155,7 +161,6 @@ const displayController = (() => {
     const updatePlayerName = () => {
         const player1Name = document.getElementById('player-O-name');
         const player2Name = document.getElementById('player-X-name');
-        const playerNames = [player1Name, player2Name];        
         // mutation observer to watch for changes to playerNames
         const config = { characterData: true, attributes: true, childList: true, subtree: true };
         const callback = function(mutationsList, observer) {
@@ -183,18 +188,23 @@ const displayController = (() => {
         player1Icon.addEventListener('mousedown', () => {
             if (player1IconOptions.style.opacity === '') {
                 player1IconOptions.style.opacity = '1';
+                player1IconOptions.style.pointerEvents = 'auto';     
             } else {
                 player1IconOptions.style.opacity = '';
+                player1IconOptions.style.pointerEvents = 'none';     
             }
         });
         player2Icon.addEventListener('mousedown', () => {
             if (player2IconOptions.style.opacity === '') {
                 player2IconOptions.style.opacity = '1';
+                player2IconOptions.style.pointerEvents = 'auto';     
             } else {
                 player2IconOptions.style.opacity = '';
+                player2IconImgs.style.pointerEvents = 'none';
+                player2IconOptions.style.pointerEvents = 'auto';     
             }
         });
-        // Update the Player object new icon value
+        // Update the Player object with new icon value
         Array.from(player1IconImgs).forEach(img => img.addEventListener('mousedown', () => {
             let newSrc = img.src;
             img.src = player1.icon;
@@ -217,8 +227,8 @@ const displayController = (() => {
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
     }
+    // Display the winner of each game
     const container = document.getElementById('container');
-    // const header = document.getElementById('header');
     const r = document.querySelector(':root');
     const pWinner = document.createElement('p');
     const pClickAnywhere = document.createElement('p');
@@ -244,6 +254,7 @@ const displayController = (() => {
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
+    // Highlight the winning pieces' moves
     const displayWinningPieces = (piece1, piece2, piece3) => {
         Array.from(gamePieces).forEach(piece => {
             console.log(typeof piece.dataset.id)
@@ -291,6 +302,21 @@ const displayController = (() => {
             player2Icon.src = 'img/PlayerX.png';
         });
     }
+    const changePlayType = () => {
+        const playTypeButton = document.getElementById('checkbox');
+        playTypeButton.addEventListener('change', () => {
+            if (playTypeButton.checked === true) {
+                console.log('2-player');
+                displayToDOM('Player X');
+            }
+            else {
+                console.log('1-player');
+                displayToDOM('Player CPU');
+                console.log(player2Icon.src);
+                player2Icon.src = playerCPU.icon;
+            }
+        });
+    }
 
     return {
         displayToDOM,
@@ -300,35 +326,16 @@ const displayController = (() => {
         updateScore,
         updatePlayerName,
         updatePlayerIcon,
-        reset
+        reset,
+        changePlayType
     }
 })();
 
-displayController.displayToDOM();
+displayController.displayToDOM('Player CPU');
 displayController.addMark();
 displayController.reset();
 displayController.updatePlayerName();
 displayController.updatePlayerIcon();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+displayController.changePlayType();
 
 
