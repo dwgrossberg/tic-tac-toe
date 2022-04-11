@@ -118,21 +118,15 @@ const gameFlow = (() => {
         player1Score = 0;
         player2Score = 0;
     }
+    let done = false;
     const cpuGamePlay = () => {
-        let counter = 0;
-        if (counter % 2 === 0) {
-            displayController.stopMarking();
-            counter++;
-        } else if (counter % 2 !== 0) {
-            displayController.addMark();
-            counter++;
-        }
+        
     }
 
     return {
         checkForWinner,
-        resetScore
-        
+        resetScore,
+        cpuGamePlay
     }
 })();
 
@@ -155,17 +149,29 @@ const displayController = (() => {
     let cpuCounter = 0;
     const cpuGameDisplay = () => {
         if (cpuCounter % 2 === 0) {
-            console.log(cpuCounter);
-
-            stopMarking();
+            addCPUMark();
             cpuCounter++;
         } else if (cpuCounter % 2 !== 0) {
-            console.log(cpuCounter);
-
             addMark();
             cpuCounter++;
         }
     }
+    const addCPUGamePiece = (e) => {
+        let gamePiece = e.target;
+        let gamePieceID = e.target.dataset.id;
+        let img = document.createElement('img');
+        if (counter % 2 === 0 && !gamePiece.firstChild) {
+            gameBoard.inputMove(player1.marker, gamePieceID);
+            img.src = player1.icon;
+            gamePiece.appendChild(img);
+            counter++;
+        } else if (counter % 2 !== 0) {
+            //gameflow function to determine cpu move
+            img.src = playerCPU.icon;
+            counter++;
+        }
+    }
+
     // Game setup for 2-player mode
     let counter = 0;
     const addGamePiece = (e) => {
@@ -186,6 +192,9 @@ const displayController = (() => {
     }
     const addMark = () => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
+    }
+    const addCPUMark = () => {
+        Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addCPUGamePiece));
     }
     const stopMarking = () => {
         Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
@@ -381,6 +390,8 @@ const displayController = (() => {
     return {
         displayToDOM,
         cpuGameDisplay,
+        addMark,
+        stopMarking,
         displayWinner,
         displayWinningPieces,
         updateScore,
