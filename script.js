@@ -107,12 +107,17 @@ const gameFlow = (() => {
             player1Score += 1;
             displayController.updateScore(player1Score, player2Score);
             console.log(player1.name + ' wins!', player1Score);
-        } else {
+        } else if (gamePiece === player2.marker) {
             displayController.displayWinner(player2.marker);
             player2Score += 1;
             displayController.updateScore(player1Score, player2Score);
             console.log(player2.name + ' wins!', player2Score);
-        }
+        } else if (gamePiece === playerCPU.marker) {
+            displayController.displayWinner(playerCPU.marker);
+            player2Score += 1;
+            displayController.updateScore(player1Score, player2Score);
+            console.log(playerCPU.name + ' wins!', player2Score);
+        } 
     }
     const resetScore = () => {
         player1Score = 0;
@@ -121,21 +126,25 @@ const gameFlow = (() => {
     let done = false;
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
+        console.log(randomMove);
+        for (let i = 0; i < 9; i++) {
+            if (gameBoard.gameBoardArray[randomMove] !== '') {
+                console.log('roll again');
+                randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
+                console.log(randomMove);
+            }
+        }
+        console.log(gameBoard.gameBoardArray[randomMove]);
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
-        console.log(gamePieces, gamePiece);
-        console.log(randomMove, gameBoard.gameBoardArray[randomMove]);
-        if (gameBoard.gameBoardArray[randomMove] !== '') {
-            return;
-        } else {
-            gameBoard.inputMove(playerCPU.marker, randomMove);
-            let img = document.createElement('img');
-            img.src = playerCPU.icon;
-            gamePiece.appendChild(img);
+        gameBoard.inputMove(playerCPU.marker, randomMove + 1);
+        let img = document.createElement('img');
+        img.src = playerCPU.icon;
+        gamePiece.appendChild(img);
         }
 
         
-    }
+    
 
     return {
         checkForWinner,
@@ -298,6 +307,10 @@ const displayController = (() => {
         } else if (winner === 'X') {
             pWinner.innerText = player2.name + ' wins!';
             container.style.backgroundImage = 'url(' + player2.icon + ')';
+            r.style.setProperty('--game-board-color', '#D3D2D4');
+        } else if (winner === 'CPU') {
+            pWinner.innerText = playerCPU.name + ' wins!';
+            container.style.backgroundImage = 'url(' + playerCPU.icon + ')';
             r.style.setProperty('--game-board-color', '#D3D2D4');
         } else if (winner === 'tie') {
             pWinner.innerText = 'Tie game!';
