@@ -114,19 +114,19 @@ const gameFlow = (() => {
         } else if (gamePiece === player1.marker) {
             console.log(player1Score, player2Score);
             displayController.displayWinner(player1.marker);
-            player1Score += 1;
             displayController.updateScore(player1Score, player2Score);
+            player1Score += 1;
             console.log(player1.name + ' wins!', player1Score);
         } else if (gamePiece === player2.marker) {
             console.log(player1Score, player2Score);
             displayController.displayWinner(player2.marker);
-            player2Score += 1;
             displayController.updateScore(player1Score, player2Score);
+            player2Score += 1;
             console.log(player2.name + ' wins!', player2Score);
         } else if (gamePiece === playerCPU.marker) {
             console.log(player1Score, player2Score);
-            displayController.displayWinner(playerCPU.marker);
             player2Score += 1;
+            displayController.displayWinner(playerCPU.marker);
             displayController.updateScore(player1Score, player2Score);
             console.log(playerCPU.name + ' wins!', player2Score);
         } 
@@ -138,7 +138,7 @@ const gameFlow = (() => {
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
         console.log(randomMove);
-        for (let i = 0; i < 9; i++) {
+        for (let i = 0; i < 100; i++) {
             if (gameBoard.gameBoardArray[randomMove] !== '') {
                 console.log('CPU roll again');
                 randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
@@ -181,10 +181,14 @@ const displayController = (() => {
     let cpuCounter = 0;
     const cpuGameDisplay = () => {
         if (cpuCounter % 2 === 0) {
+            stopMarking();
             addCPUMark();
+            console.log(cpuCounter);
             cpuCounter++;
         } else if (cpuCounter % 2 !== 0) {
+            stopCPUMarking();
             addMark();
+            console.log(cpuCounter);
             cpuCounter++;
         }
     }
@@ -223,11 +227,14 @@ const displayController = (() => {
     const addMark = () => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addGamePiece));
     }
+    const stopMarking = () => {
+        Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
+    }
     const addCPUMark = () => {
         Array.from(gamePieces).forEach(div => div.addEventListener('mousedown', addCPUGamePiece));
     }
-    const stopMarking = () => {
-        Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
+    const stopCPUMarking = () => {
+        Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addCPUGamePiece));
     }
     const updatePlayerName = () => {
         const player1Name = document.getElementById('player-O-name');
@@ -329,13 +336,12 @@ const displayController = (() => {
         }
         winnerDiv.appendChild(pWinner);
         winnerDiv.appendChild(pClickAnywhere);
-        Array.from(gamePieces).forEach(div => div.removeEventListener('mousedown', addGamePiece));
+        stopMarking();
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
     // Highlight the winning pieces' moves
     const displayWinningPieces = (piece1, piece2, piece3) => {
         Array.from(gamePieces).forEach(piece => {
-            console.log(typeof piece.dataset.id)
             if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
                 piece.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             } else {
