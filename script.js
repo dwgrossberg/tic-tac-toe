@@ -68,29 +68,38 @@ const gameFlow = (() => {
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 1, 2);
+            return true;
         } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
             whoIsWinner(check[3]);
             displayController.displayWinningPieces(3, 4, 5);
+            return true;
         } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
             whoIsWinner(check[6]);
             displayController.displayWinningPieces(6, 7, 8);
+            return true;
         } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 3, 6);
+            return true;
         } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
             whoIsWinner(check[1]);
             displayController.displayWinningPieces(1, 4, 7);
+            return true;
         } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
             whoIsWinner(check[2]);
             displayController.displayWinningPieces(2, 5, 8);
+            return true;
         } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 4, 8);
+            return true;
         } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
             whoIsWinner(check[2]);
             displayController.displayWinningPieces(2, 4, 6);
+            return true;
         } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
             whoIsWinner('tie');
+            return true;
         } else {
             console.log('no winner yet');
         }
@@ -103,16 +112,19 @@ const gameFlow = (() => {
             console.log('Tie game!');
             displayController.displayWinner('tie');
         } else if (gamePiece === player1.marker) {
+            console.log(player1Score, player2Score);
             displayController.displayWinner(player1.marker);
             player1Score += 1;
             displayController.updateScore(player1Score, player2Score);
             console.log(player1.name + ' wins!', player1Score);
         } else if (gamePiece === player2.marker) {
+            console.log(player1Score, player2Score);
             displayController.displayWinner(player2.marker);
             player2Score += 1;
             displayController.updateScore(player1Score, player2Score);
             console.log(player2.name + ' wins!', player2Score);
         } else if (gamePiece === playerCPU.marker) {
+            console.log(player1Score, player2Score);
             displayController.displayWinner(playerCPU.marker);
             player2Score += 1;
             displayController.updateScore(player1Score, player2Score);
@@ -123,18 +135,16 @@ const gameFlow = (() => {
         player1Score = 0;
         player2Score = 0;
     }
-    let done = false;
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
         console.log(randomMove);
         for (let i = 0; i < 9; i++) {
             if (gameBoard.gameBoardArray[randomMove] !== '') {
-                console.log('roll again');
+                console.log('CPU roll again');
                 randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
                 console.log(randomMove);
-            }
+            } 
         }
-        console.log(gameBoard.gameBoardArray[randomMove]);
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
         gameBoard.inputMove(playerCPU.marker, randomMove + 1);
@@ -142,7 +152,6 @@ const gameFlow = (() => {
         img.src = playerCPU.icon;
         gamePiece.appendChild(img);
         }
-
         
     
 
@@ -187,7 +196,9 @@ const displayController = (() => {
             gameBoard.inputMove(player1.marker, gamePieceID);
             img.src = player1.icon;
             gamePiece.appendChild(img);
-            gameFlow.cpuGamePlay();        
+            if (gameFlow.checkForWinner() !== true) {
+                gameFlow.cpuGamePlay();  
+            }      
         }
 }
 
