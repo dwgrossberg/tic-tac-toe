@@ -120,6 +120,20 @@ const gameFlow = (() => {
     }
     let done = false;
     const cpuGamePlay = () => {
+        let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
+        let gamePieces = document.querySelectorAll('div[data-id]');
+        let gamePiece = gamePieces[randomMove];
+        console.log(gamePieces, gamePiece);
+        console.log(randomMove, gameBoard.gameBoardArray[randomMove]);
+        if (gameBoard.gameBoardArray[randomMove] !== '') {
+            return;
+        } else {
+            gameBoard.inputMove(playerCPU.marker, randomMove);
+            let img = document.createElement('img');
+            img.src = playerCPU.icon;
+            gamePiece.appendChild(img);
+        }
+
         
     }
 
@@ -160,17 +174,13 @@ const displayController = (() => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
-        if (counter % 2 === 0 && !gamePiece.firstChild) {
+        if (!gamePiece.firstChild) {
             gameBoard.inputMove(player1.marker, gamePieceID);
             img.src = player1.icon;
             gamePiece.appendChild(img);
-            counter++;
-        } else if (counter % 2 !== 0) {
-            //gameflow function to determine cpu move
-            img.src = playerCPU.icon;
-            counter++;
+            gameFlow.cpuGamePlay();        
         }
-    }
+}
 
     // Game setup for 2-player mode
     let counter = 0;
