@@ -65,6 +65,7 @@ const gameBoard = (() => {
 const gameFlow = (() => {
     const check = gameBoard.gameBoardArray;
     const checkForWinner = () => {
+        console.log('hi');
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 1, 2);
@@ -113,15 +114,15 @@ const gameFlow = (() => {
             displayController.displayWinner('tie');
         } else if (gamePiece === player1.marker) {
             console.log(player1Score, player2Score);
+            player1Score += 1;
             displayController.displayWinner(player1.marker);
             displayController.updateScore(player1Score, player2Score);
-            player1Score += 1;
             console.log(player1.name + ' wins!', player1Score);
         } else if (gamePiece === player2.marker) {
             console.log(player1Score, player2Score);
+            player2Score += 1;
             displayController.displayWinner(player2.marker);
             displayController.updateScore(player1Score, player2Score);
-            player2Score += 1;
             console.log(player2.name + ' wins!', player2Score);
         } else if (gamePiece === playerCPU.marker) {
             console.log(player1Score, player2Score);
@@ -183,12 +184,10 @@ const displayController = (() => {
         if (cpuCounter % 2 === 0) {
             stopMarking();
             addCPUMark();
-            console.log(cpuCounter);
             cpuCounter++;
         } else if (cpuCounter % 2 !== 0) {
             stopCPUMarking();
             addMark();
-            console.log(cpuCounter);
             cpuCounter++;
         }
     }
@@ -196,15 +195,16 @@ const displayController = (() => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
-        if (!gamePiece.firstChild) {
+        console.log(gameBoard.gameBoardArray[gamePiece.dataset.id - 1]);
+        if (gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
             gameBoard.inputMove(player1.marker, gamePieceID);
             img.src = player1.icon;
             gamePiece.appendChild(img);
             if (gameFlow.checkForWinner() !== true) {
                 gameFlow.cpuGamePlay();  
-            }      
+            } 
         }
-}
+    } 
 
     // Game setup for 2-player mode
     let counter = 0;
@@ -212,12 +212,12 @@ const displayController = (() => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
-        if (counter % 2 === 0 && !gamePiece.firstChild) {
+        if (counter % 2 === 0 && gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
             gameBoard.inputMove(player1.marker, gamePieceID);
             img.src = player1.icon;
             gamePiece.appendChild(img);
             counter++;
-        } else if (counter % 2 !== 0 && !gamePiece.firstChild) {
+        } else if (counter % 2 !== 0 && gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
             gameBoard.inputMove(player2.marker, gamePieceID);
             img.src = player2.icon;
             gamePiece.appendChild(img);
@@ -431,7 +431,6 @@ const displayController = (() => {
         displayToDOM,
         cpuGameDisplay,
         addMark,
-        stopMarking,
         displayWinner,
         displayWinningPieces,
         updateScore,
