@@ -118,14 +118,21 @@ const gameFlow = (() => {
         player1Score = 0;
         player2Score = 0;
     }
-    const cpuPlay = () => {
-
+    const cpuGamePlay = () => {
+        let counter = 0;
+        if (counter % 2 === 0) {
+            displayController.stopMarking();
+            counter++;
+        } else if (counter % 2 !== 0) {
+            displayController.addMark();
+            counter++;
+        }
     }
 
     return {
         checkForWinner,
-        resetScore,
-        cpuPlay
+        resetScore
+        
     }
 })();
 
@@ -143,7 +150,23 @@ const displayController = (() => {
             gameBoardDOM.appendChild(gamePiece);
         }
     }
+    // Game setup for 1-player mode
     const gamePieces = document.getElementsByClassName('game-piece');
+    let cpuCounter = 0;
+    const cpuGameDisplay = () => {
+        if (cpuCounter % 2 === 0) {
+            console.log(cpuCounter);
+
+            stopMarking();
+            cpuCounter++;
+        } else if (cpuCounter % 2 !== 0) {
+            console.log(cpuCounter);
+
+            addMark();
+            cpuCounter++;
+        }
+    }
+    // Game setup for 2-player mode
     let counter = 0;
     const addGamePiece = (e) => {
         let gamePiece = e.target;
@@ -336,7 +359,7 @@ const displayController = (() => {
                 player2Icon.style.cursor = 'pointer';
                 player2Icon.src = player2.icon;
                 player2Icon.style.pointerEvents = 'auto';     
-
+                cpuGameDisplay();
             }
             else {
                 clearGamePieces();     
@@ -349,15 +372,15 @@ const displayController = (() => {
                 playerCPUIcon.src = playerCPU.icon;
                 playerCPUIcon.classList.add('playerCPU');
                 playerCPUIcon.style.pointerEvents = 'none';   
-                player2IconOptions.style.pointerEvents = 'none';     
+                player2IconOptions.style.pointerEvents = 'none';
+                cpuGameDisplay();
             }
         });
     }
 
     return {
         displayToDOM,
-        addMark,
-        stopMarking,
+        cpuGameDisplay,
         displayWinner,
         displayWinningPieces,
         updateScore,
@@ -369,7 +392,7 @@ const displayController = (() => {
 })();
 
 displayController.displayToDOM('Player CPU');
-displayController.addMark();
+displayController.cpuGameDisplay();
 displayController.reset();
 displayController.updatePlayerName();
 displayController.updatePlayerIcon();
