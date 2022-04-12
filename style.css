@@ -63,7 +63,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 160px;
+    gap: 40px;
 }
 
 #player-O-icon-options,
@@ -71,7 +71,7 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 175px;
+    width: 180px;
     height: 30px;
     background-color: #F2FCEE;
     border-radius: 5px;
@@ -169,6 +169,7 @@ body {
     gap: 5px;
 }
 
+#easy-hard,
 #play-type,
 #reset {
     width: 80px;
@@ -198,11 +199,18 @@ label:hover {
     cursor: pointer;
 }
 
+#easy-hard,
 #play-type {
     background-color: #F2FCEE;
     position: relative;
     color: #201D1E;
     font-size: 9px;
+}
+
+#easy-hard:hover,
+#play-type:hover {
+    box-shadow: 1px 1px #7A7375;
+
 }
 
 span::after {
@@ -228,14 +236,28 @@ input:checked + span:after {
 }
 
 #reset {
-    background-color: #1E8566;
+    background-color: #D3D2D4;
+    color: black;
 }
 
 #reset:hover {
     text-decoration: underline;
-    text-shadow: 1px 1px #7A7375;
+    box-shadow: 1px 1px #7A7375;
     cursor: pointer;
-    transform: scale(1.01);
+}
+
+#easy-hard {
+    height: 20px;
+    margin-bottom: -20px;
+}
+
+.easy-hard::after {
+    height: 20px;
+}
+
+input:checked + .easy-hard::after {
+    height: 20px;
+    background-color: #8638A8;
 }
 
 #game-board {

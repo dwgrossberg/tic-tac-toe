@@ -382,7 +382,7 @@ const displayController = (() => {
             div.innerText = '';
         });
     }
-    const playTypeButton = document.getElementById('checkbox');
+    const playTypeButton = document.getElementById('play-type-button');
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
             r.style.setProperty('--game-board-color', '#8638A8');
@@ -423,6 +423,8 @@ const displayController = (() => {
             playerCPUIcon.src = 'img/PlayerCPU.png';
         });
     }
+    const easyHard = document.getElementById('easy-hard');
+    const easyHardButton = document.getElementById('easy-hard-button');
     const changePlayType = () => {
         playTypeButton.addEventListener('change', () => {
             if (playTypeButton.checked === true) {
@@ -430,7 +432,9 @@ const displayController = (() => {
                 gameFlow.resetScore();
                 updateScore(0, 0);
                 player1IconOptions.style.opacity = '';
-                player2IconOptions.style.opacity = '';  
+                player2IconOptions.style.opacity = '';
+                easyHard.style.opacity = '0';
+                easyHard.style.pointerEvents = 'none';
                 console.log('2-player');
                 player2.setName('Player X', 'Player X');
                 playerCPUIcon.setAttribute('id', 'player-X-icon');
@@ -452,6 +456,9 @@ const displayController = (() => {
                 playerCPUIcon.classList.add('playerCPU');
                 playerCPUIcon.style.pointerEvents = 'none';   
                 player2IconOptions.style.pointerEvents = 'none';
+                easyHard.style.opacity = '1';
+                easyHard.style.pointerEvents = 'auto';
+                easyHardButton.checked = false;
                 cpuGameDisplay();
             }
         });
