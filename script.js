@@ -65,7 +65,6 @@ const gameBoard = (() => {
 const gameFlow = (() => {
     const check = gameBoard.gameBoardArray;
     const checkForWinner = () => {
-        console.log('hi');
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 1, 2);
@@ -136,19 +135,16 @@ const gameFlow = (() => {
             console.log('Tie game!');
             displayController.displayWinner('tie');
         } else if (gamePiece === player1.marker) {
-            console.log(player1Score, player2Score);
             player1Score += 1;
             displayController.displayWinner(player1.marker);
             displayController.updateScore(player1Score, player2Score);
             console.log(player1.name + ' wins!', player1Score);
         } else if (gamePiece === player2.marker) {
-            console.log(player1Score, player2Score);
             player2Score += 1;
             displayController.displayWinner(player2.marker);
             displayController.updateScore(player1Score, player2Score);
             console.log(player2.name + ' wins!', player2Score);
         } else if (gamePiece === playerCPU.marker) {
-            console.log(player1Score, player2Score);
             player2Score += 1;
             displayController.displayWinner(playerCPU.marker);
             displayController.updateScore(player1Score, player2Score);
@@ -220,14 +216,14 @@ const displayController = (() => {
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
         if (gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
-            console.log('why1');
             gameBoard.inputMove(player1.marker, gamePieceID);
-            console.log('why');
             img.src = player1.icon;
             gamePiece.appendChild(img);
             if (gameFlow.checkIfWinner() !== true) {
                 gameFlow.cpuGamePlay();
-            } 
+            } else {
+                stopCPUMarking();
+            }
         }
     } 
 
@@ -383,6 +379,7 @@ const displayController = (() => {
             div.innerText = '';
         });
     }
+    const playTypeButton = document.getElementById('checkbox');
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
             r.style.setProperty('--game-board-color', '#8638A8');
@@ -397,7 +394,13 @@ const displayController = (() => {
             container.classList.remove('tie');
             container.style.backgroundImage = '';
             counter = 0;
-            addMark();
+            if (playTypeButton.checked) {
+                stopCPUMarking();
+                addMark();  
+            } else {
+                stopMarking();
+                addCPUMark();
+            }
         }, {once : true});
     }
     const reset = () => {
@@ -417,7 +420,6 @@ const displayController = (() => {
             playerCPUIcon.src = 'img/PlayerCPU.png';
         });
     }
-    const playTypeButton = document.getElementById('checkbox');
     const changePlayType = () => {
         playTypeButton.addEventListener('change', () => {
             if (playTypeButton.checked === true) {
