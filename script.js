@@ -104,7 +104,30 @@ const gameFlow = (() => {
         } else {
             console.log('no winner yet');
         }
- 
+    }
+    //repetitive but necessary in order to check for winner without calling whoIsWinner function during CPU gameplay
+    const checkIfWinner = () => { 
+        if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
+            return true;
+        } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
+            return true;
+        } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
+            return true;
+        } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
+            return true;
+        } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
+            return true;
+        } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
+            return true;
+        } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
+            return true;
+        } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
+            return true;
+        } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
+            return true;
+        } else {
+            return false;
+        }
     }
     let player1Score = 0;
     let player2Score = 0;
@@ -138,12 +161,12 @@ const gameFlow = (() => {
     }
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
-        console.log(randomMove);
+        console.log('CPU random index: ' + randomMove);
         for (let i = 0; i < 100; i++) {
             if (gameBoard.gameBoardArray[randomMove] !== '') {
                 console.log('CPU roll again');
                 randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
-                console.log(randomMove);
+                console.log('CPU random index: ' + randomMove);
             } 
         }
         let gamePieces = document.querySelectorAll('div[data-id]');
@@ -158,6 +181,7 @@ const gameFlow = (() => {
 
     return {
         checkForWinner,
+        checkIfWinner,
         resetScore,
         cpuGamePlay
     }
@@ -195,13 +219,14 @@ const displayController = (() => {
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
-        console.log(gameBoard.gameBoardArray[gamePiece.dataset.id - 1]);
         if (gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
+            console.log('why1');
             gameBoard.inputMove(player1.marker, gamePieceID);
+            console.log('why');
             img.src = player1.icon;
             gamePiece.appendChild(img);
-            if (gameFlow.checkForWinner() !== true) {
-                gameFlow.cpuGamePlay();  
+            if (gameFlow.checkIfWinner() !== true) {
+                gameFlow.cpuGamePlay();
             } 
         }
     } 
