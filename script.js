@@ -167,12 +167,15 @@ const gameFlow = (() => {
         }
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
-        gameBoard.inputMove(playerCPU.marker, randomMove + 1);
-        let img = document.createElement('img');
-        img.src = playerCPU.icon;
-        gamePiece.appendChild(img);
+            gameBoard.inputMove(playerCPU.marker, randomMove + 1);
+            let img = document.createElement('img');
+            img.src = playerCPU.icon;
+            gamePiece.appendChild(img);
+        if (checkIfWinner() === true) {
+            displayController.stopCPUMarking();
         }
-        
+    } 
+    
     
 
     return {
@@ -458,6 +461,7 @@ const displayController = (() => {
         displayToDOM,
         cpuGameDisplay,
         addMark,
+        stopCPUMarking,
         displayWinner,
         displayWinningPieces,
         updateScore,
