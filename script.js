@@ -68,43 +68,34 @@ const gameFlow = (() => {
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 1, 2);
-            return true;
         } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
             whoIsWinner(check[3]);
             displayController.displayWinningPieces(3, 4, 5);
-            return true;
         } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
             whoIsWinner(check[6]);
             displayController.displayWinningPieces(6, 7, 8);
-            return true;
         } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 3, 6);
-            return true;
         } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
             whoIsWinner(check[1]);
             displayController.displayWinningPieces(1, 4, 7);
-            return true;
         } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
             whoIsWinner(check[2]);
             displayController.displayWinningPieces(2, 5, 8);
-            return true;
         } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
             whoIsWinner(check[0]);
             displayController.displayWinningPieces(0, 4, 8);
-            return true;
         } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
             whoIsWinner(check[2]);
             displayController.displayWinningPieces(2, 4, 6);
-            return true;
         } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
             whoIsWinner('tie');
-            return true;
         } else {
             console.log('no winner yet');
         }
     }
-    //repetitive but necessary in order to check for winner without calling whoIsWinner function during CPU gameplay
+    //repetitive but necessary in order to check for winner without calling whoIsWinner function during CPU gameplay (led to double scoring bug)
     const checkIfWinner = () => { 
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
             return true;
@@ -158,7 +149,7 @@ const gameFlow = (() => {
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
         console.log('CPU random index: ' + randomMove);
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 1000; i++) {
             if (gameBoard.gameBoardArray[randomMove] !== '') {
                 console.log('CPU roll again');
                 randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
@@ -174,7 +165,10 @@ const gameFlow = (() => {
         if (checkIfWinner() === true) {
             displayController.stopCPUMarking();
         }
-    } 
+    }
+    const emptySpaces = () => {
+        console.log(gameBoard.gameBoardArray.filter(s => s.length < 1));
+    }
     
     
 
@@ -182,7 +176,8 @@ const gameFlow = (() => {
         checkForWinner,
         checkIfWinner,
         resetScore,
-        cpuGamePlay
+        cpuGamePlay,
+        emptySpaces
     }
 })();
 
@@ -215,6 +210,7 @@ const displayController = (() => {
         }
     }
     const addCPUGamePiece = (e) => {
+        gameFlow.emptySpaces();
         let gamePiece = e.target;
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
@@ -369,7 +365,6 @@ const displayController = (() => {
             if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
                 piece.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             } else {
-                // piece.style.opacity = '.25';
                 piece.style.backgroundColor = 'rgba(122, 115, 117, .75)';
             }
         });
