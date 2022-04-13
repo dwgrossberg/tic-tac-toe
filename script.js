@@ -166,8 +166,14 @@ const gameFlow = (() => {
             displayController.stopCPUMarking();
         }
     }
+    // Find gameBoard empty spaces for the minimax function
     const emptySpaces = () => {
-        console.log(gameBoard.gameBoardArray.filter(s => s.length < 1));
+        console.log(gameBoard.gameBoardArray.map((item, index) => {
+            if (item.length < 1) {
+                return index;
+            } 
+        }).filter(item => item)
+        );
     }
     
     
