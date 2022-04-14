@@ -92,31 +92,7 @@ const gameFlow = (() => {
         } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
             whoIsWinner('tie');
         } else {
-            console.log('no winner yet');
-        }
-    }
-    //repetitive but necessary in order to check for winner without calling whoIsWinner function during CPU gameplay (led to double scoring bug)
-    const checkIfWinner = () => { 
-        if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
-            return true;
-        } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
-            return true;
-        } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
-            return true;
-        } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
-            return true;
-        } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
-            return true;
-        } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
-            return true;
-        } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
-            return true;
-        } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
-            return true;
-        } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
-            return true;
-        } else {
-            return false;
+            console.log('No winner yet');
         }
     }
     let player1Score = 0;
@@ -142,6 +118,34 @@ const gameFlow = (() => {
             console.log(playerCPU.name + ' wins!', player2Score);
         } 
     }
+    //repetitive but necessary in order to check for winner without calling whoIsWinner function during CPU gameplay (led to double scoring bug)
+    const checkIfWinner = (newBoard, player) => { 
+        if (newBoard[0] !== '' && newBoard[0] === newBoard[1] && newBoard[1] === newBoard[2]) {
+            if (newBoard[0] === player1.marker) {
+                return player1.name;
+            } else {
+                return playerCPU.name;
+            }
+        } else if (newBoard[3] !== '' && newBoard[3] === newBoard[4] && newBoard[4] === newBoard[5]) {
+            return true;
+        } else if (newBoard[6] !== '' && newBoard[6] === newBoard[7] && newBoard[7] === newBoard[8]) {
+            return true;
+        } else if (newBoard[0] !== '' && newBoard[0] === newBoard[3] && newBoard[3] === newBoard[6]) {
+            return true;
+        } else if (newBoard[1] !== '' && newBoard[1] === newBoard[4] && newBoard[4] === newBoard[7]) {
+            return true;
+        } else if (newBoard[2] !== '' && newBoard[2] === newBoard[5] && newBoard[5] === newBoard[8]) {
+            return true;
+        } else if (newBoard[0] !== '' && newBoard[0] === newBoard[4] && newBoard[4] === newBoard[8]) {
+            return true;
+        } else if (newBoard[2] !== '' && newBoard[2] === newBoard[4] && newBoard[4] === newBoard[6]) {
+            return true;
+        } else if (newBoard[0] !== '' && newBoard[1] !== '' && newBoard[2] !== '' && newBoard[3] !== '' && newBoard[4] !== '' && newBoard[5] !== '' && newBoard[6] !== '' && newBoard[7] !== ''  && newBoard[8] !== '') {
+            return true;
+        } else {
+            return false;
+        }
+    }
     const resetScore = () => {
         player1Score = 0;
         player2Score = 0;
@@ -162,20 +166,67 @@ const gameFlow = (() => {
             let img = document.createElement('img');
             img.src = playerCPU.icon;
             gamePiece.appendChild(img);
-        if (checkIfWinner() === true) {
+        if (checkIfWinner(gameBoard.gameBoardArray) === true) {
             displayController.stopCPUMarking();
         }
     }
     // Find gameBoard empty spaces for the minimax function
     const emptySpaces = () => {
-        console.log(gameBoard.gameBoardArray.map((item, index) => {
+        return gameBoard.gameBoardArray.map((item, index) => {
             if (item.length < 1) {
                 return index;
             } 
-        }).filter(item => item)
-        );
+            }).filter(item => item);
     }
+    const minimax = (newBoard, player) => {
+        let openSpaces = emptySpaces();
+        if (checkIfWinner(newBoard, player1.marker)) {
+            return { score: -10 };
+        } else if (checkWin(newBoard, aiPlayer)) {
+            return { score: 10 };
+        } else if (availSpots.length === 0) {
+            return { score: 0 };
+        }
+        var moves = [];
+        for (var i = 0; i < availSpots.length; i++) {
+            var move = {};
+            move.index = newBoard[availSpots[i]];
+            newBoard[availSpots[i]] = player;
     
+            if (player == aiPlayer) {
+                var result = minimax(newBoard, huPlayer);
+                move.score = result.score;
+            } else {
+                var result = minimax(newBoard, aiPlayer);
+                move.score = result.score;
+            }
+    
+            newBoard[availSpots[i]] = move.index;
+    
+            moves.push(move);
+        }
+    
+        var bestMove;
+        if (player === aiPlayer) {
+            var bestScore = -10000;
+            for (var i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        } else {
+            var bestScore = 10000;
+            for (var i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+    
+        return moves[bestMove];
+    }
     
 
     return {
@@ -224,7 +275,7 @@ const displayController = (() => {
             gameBoard.inputMove(player1.marker, gamePieceID);
             img.src = player1.icon;
             gamePiece.appendChild(img);
-            if (gameFlow.checkIfWinner() !== true) {
+            if (gameFlow.checkIfWinner(gameBoard.gameBoardArray) !== true) {
                 gameFlow.cpuGamePlay();
             } else {
                 stopCPUMarking();
