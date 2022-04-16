@@ -167,9 +167,9 @@ const gameFlow = (() => {
         }
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
-        let huResult = minimax(gameBoard.gameBoardArray, player1.marker);
-        let cpuResult = minimax(gameBoard.gameBoardArray, playerCPU.marker);
-        minimax(gameBoard.gameBoardArray, playerCPU, huResult, cpuResult);
+        // let huResult = console.log(minimax(gameBoard.gameBoardArray, player1.marker));
+        // let cpuResult = console.log(minimax(gameBoard.gameBoardArray, playerCPU.marker));
+        console.log(minimax(gameBoard.gameBoardArray, playerCPU));
         gameBoard.inputMove(playerCPU.marker, randomMove + 1);
         let img = document.createElement('img');
         img.src = playerCPU.icon;
@@ -186,64 +186,74 @@ const gameFlow = (() => {
             } 
             }).filter(item => item);
     }
-    const minimax = (oldBoard, player, huResult, cpuResult) => {
-        let openSpaces = emptySpaces();
-        let newBoard = [];
-        for (let i = 0; i < oldBoard.length; i++) {
-            if (oldBoard[i] === '') {
-                newBoard.push(i + 1);
-            } else {
-                newBoard.push(oldBoard[i]);
-            }
-        }
-        if (checkIfWinner(newBoard, player1)) {
-            return { score: -10 };
-        } else if (checkIfWinner(newBoard, playerCPU)) {
-            return { score: 10 };
-        } else if (openSpaces.length === 0) {
-            return { score: 0 };
-        }
-
-        let moves = [];
-        for (let i = 0; i < openSpaces.length; i++) {
-            let move = {};
-            move.index = newBoard[openSpaces[i]];
-            newBoard[openSpaces[i]] = player.marker;
-            console.log(playerCPU.marker);
-            if (player == playerCPU) {
-                let result = huResult;
-                move.score = result;
-            } else {
-                let result = cpuResult;
-                move.score = result;
-            }
-            newBoard[openSpaces[i]] = move.index;
-            moves.push(move);
-            console.log(moves, move.score);
-
-
-        }
-        let bestMove;
-        if (player === playerCPU) {
-            let bestScore = -10000;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score > bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
+    function loop(x) {
+        if (x >= 5) {
+            return;
+    const minimax = (oldBoard, player) => {
+            
+            
+              
+                let openSpaces = emptySpaces();
+                let newBoard = [];
+                for (let i = 0; i < oldBoard.length; i++) {
+                    if (oldBoard[i] === '') {
+                        newBoard.push(i + 1);
+                    } else {
+                        newBoard.push(oldBoard[i]);
+                    }
                 }
-            }
-        } else {
-            let bestScore = 10000;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score < bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
+
+                console.log(newBoard, checkIfWinner(oldBoard, player1));
+                if (checkIfWinner(oldBoard, player1) === true) {
+                    return { score: -10 };
+                } else if (checkIfWinner(oldBoard, playerCPU) === true) {
+                    return { score: 10 };
+                } else if (openSpaces.length === 0) {
+                    return { score: 0 };
                 }
+
+                let moves = [];
+                for (let i = 0; i < openSpaces.length; i++) {
+                    let move = {};
+                    move.index = newBoard[openSpaces[i]];
+                    newBoard[openSpaces[i]] = player.marker;
+                    if (player == playerCPU) {
+                        let result = minimax(gameBoard.gameBoardArray, player1);
+                        move.score = result.score;
+
+                    } else {
+                        let result = minimax(gameBoard.gameBoardArray, playerCPU);                ;
+                        move.score = result.score;
+                    }
+                    newBoard[openSpaces[i]] = move.index;
+                    moves.push(move);
+                }
+                let bestMove;
+                if (player === playerCPU) {
+                    let bestScore = -10000;
+                    for (let i = 0; i < moves.length; i++) {
+                        if (moves[i].score > bestScore) {
+                            bestScore = moves[i].score;
+                            bestMove = i;
+                        }
+                    }
+                } else {
+                    let bestScore = 10000;
+                    for (let i = 0; i < moves.length; i++) {
+                        if (moves[i].score < bestScore) {
+                            bestScore = moves[i].score;
+                            bestMove = i;
+                        }
+                    }
+                }
+                return console.log(moves[bestMove]);
             }
         }
-    
-        return console.log(moves[bestMove]);
+        
+        loop(x + 1);
     }
+    
+    loop(0);
 
     return {
         checkForWinner,
