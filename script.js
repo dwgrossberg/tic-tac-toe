@@ -144,7 +144,7 @@ const gameFlow = (() => {
             }
         }
         if (boardCheck() !== false) {
-            if (boardCheck() === player.marker) {
+            if (boardCheck() === player.marker || boardCheck() === true) {
                 return true;
             } 
         } else {
@@ -158,7 +158,7 @@ const gameFlow = (() => {
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
         console.log('CPU random index: ' + randomMove);
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 100; i++) {
             if (gameBoard.gameBoardArray[randomMove] !== '') {
                 console.log('CPU roll again');
                 randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
@@ -167,11 +167,13 @@ const gameFlow = (() => {
         }
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
+        let huResult = minimax(gameBoard.gameBoardArray, player1.marker);
+        let cpuResult = minimax(gameBoard.gameBoardArray, playerCPU.marker);
+        minimax(gameBoard.gameBoardArray, playerCPU, huResult, cpuResult);
         gameBoard.inputMove(playerCPU.marker, randomMove + 1);
         let img = document.createElement('img');
         img.src = playerCPU.icon;
         gamePiece.appendChild(img);
-        console.log(checkIfWinner(gameBoard.gameBoardArray, playerCPU));
         if (checkIfWinner(gameBoard.gameBoardArray, playerCPU) === true || checkIfWinner(gameBoard.gameBoardArray, player1) === true) {
             displayController.stopCPUMarking();
         }
@@ -184,7 +186,7 @@ const gameFlow = (() => {
             } 
             }).filter(item => item);
     }
-    const minimax = (oldBoard, player) => {
+    const minimax = (oldBoard, player, huResult, cpuResult) => {
         let openSpaces = emptySpaces();
         let newBoard = [];
         for (let i = 0; i < oldBoard.length; i++) {
@@ -194,7 +196,6 @@ const gameFlow = (() => {
                 newBoard.push(oldBoard[i]);
             }
         }
-        console.log(newBoard);
         if (checkIfWinner(newBoard, player1)) {
             return { score: -10 };
         } else if (checkIfWinner(newBoard, playerCPU)) {
@@ -202,24 +203,25 @@ const gameFlow = (() => {
         } else if (openSpaces.length === 0) {
             return { score: 0 };
         }
-        console.log(openSpaces);
 
         let moves = [];
         for (let i = 0; i < openSpaces.length; i++) {
             let move = {};
             move.index = newBoard[openSpaces[i]];
             newBoard[openSpaces[i]] = player.marker;
+            console.log(playerCPU.marker);
             if (player == playerCPU) {
-                console.log('hi');
-
-                let result = minimax(newBoard, player1);
-                move.score = result.score;
+                let result = huResult;
+                move.score = result;
             } else {
-                let result = minimax(newBoard, playerCPU);
-                move.score = result.score;
+                let result = cpuResult;
+                move.score = result;
             }
             newBoard[openSpaces[i]] = move.index;
             moves.push(move);
+            console.log(moves, move.score);
+
+
         }
         let bestMove;
         if (player === playerCPU) {
