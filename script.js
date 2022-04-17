@@ -54,7 +54,7 @@ const playerCPU = Player('CPU');
 const gameBoard = (() => {
     let gameBoardArray = ['', '', '', '', '', '', '', '', '']
     const inputMove = (marker, space) => {
-        gameBoardArray[space - 1] = marker;
+        gameBoardArray[space] = marker;
         console.log(gameBoardArray);
         gameFlow.checkForWinner();
     };
@@ -113,17 +113,16 @@ const gameFlow = (() => {
         return false;
     }    
 
-    const check = gameBoard.gameBoardArray;
     const checkForWinner = () => {
         if (checkWin(gameBoard.gameBoardArray, player1.marker)) {
             whoIsWinner(player1.marker);
-            console.log(winCombos[checkWin(gameBoard.gameBoardArray, player1.marker).index])
-            displayController.displayWinningPieces(0, 1, 2);
+            displayController.displayWinningPieces(winCombos[checkWin(gameBoard.gameBoardArray, player1.marker).index]);
         } else if (checkWin(gameBoard.gameBoardArray, player2.marker)) {
             whoIsWinner(player2.marker);
+            displayController.displayWinningPieces(winCombos[checkWin(gameBoard.gameBoardArray, player2.marker).index]);
         } else if (checkWin(gameBoard.gameBoardArray, playerCPU.marker)) {
             whoIsWinner(playerCPU.marker);
-
+            displayController.displayWinningPieces(winCombos[checkWin(gameBoard.gameBoardArray, playerCPU.marker).index]);
         } else if (checkTie() === true) {
             whoIsWinner('tie');
         } else {
@@ -173,9 +172,13 @@ const gameFlow = (() => {
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
 
-        // console.log(minimax(gameBoard.gameBoardArray, playerCPU));
-        
-        gameBoard.inputMove(playerCPU.marker, randomMove + 1);
+        const easyHardButton = document.getElementById('easy-hard-button');
+        if (easyHardButton.checked === true) {
+        //  gameBoard.inputMove(playerCPU.marker, smartCPU.index);
+            gameBoard.inputMove(playerCPU.marker, randomMove);
+        } else {
+            gameBoard.inputMove(playerCPU.marker, randomMove);
+        }
         let img = document.createElement('img');
         img.src = playerCPU.icon;
         gamePiece.appendChild(img);
@@ -184,9 +187,7 @@ const gameFlow = (() => {
         }
     }
     
-
-
-    const smartCPU = (oldBoard, player) => {
+    const smartCPU = () => {
         let newBoard = [];
         for (let i = 0; i < oldBoard.length; i++) {
             if (oldBoard[i] === '') {
@@ -195,9 +196,9 @@ const gameFlow = (() => {
                 newBoard.push(oldBoard[i]);
             }
         }
-
-
-
+        if (gameBoard.gameBoardArray[4] === '') {
+            gameBoard.inputMove(playerCPU.marker, 4)
+        }
     }
 
     function minimax(oldBoard, player) {
@@ -304,7 +305,7 @@ const displayController = (() => {
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
         if (gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
-            gameBoard.inputMove(player1.marker, gamePieceID);
+            gameBoard.inputMove(player1.marker, gamePieceID - 1);
             img.src = player1.icon;
             gamePiece.appendChild(img);
             console.log(gameFlow.checkWin(gameBoard.gameBoardArray, player1.marker), gameFlow.checkTie());
@@ -323,12 +324,12 @@ const displayController = (() => {
         let gamePieceID = e.target.dataset.id;
         let img = document.createElement('img');
         if (counter % 2 === 0 && gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
-            gameBoard.inputMove(player1.marker, gamePieceID);
+            gameBoard.inputMove(player1.marker, gamePieceID - 1);
             img.src = player1.icon;
             gamePiece.appendChild(img);
             counter++;
         } else if (counter % 2 !== 0 && gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
-            gameBoard.inputMove(player2.marker, gamePieceID);
+            gameBoard.inputMove(player2.marker, gamePieceID - 1);
             img.src = player2.icon;
             gamePiece.appendChild(img);
             counter++;
@@ -457,9 +458,9 @@ const displayController = (() => {
     }
     
     // Highlight the winning pieces' moves
-    const displayWinningPieces = (piece1, piece2, piece3) => {
+    const displayWinningPieces = (array) => {
         Array.from(gamePieces).forEach(piece => {
-            if (piece.dataset.id === String(piece1 + 1) || piece.dataset.id === String(piece2 + 1) || piece.dataset.id === String(piece3 + 1)) {
+            if (piece.dataset.id === String(array[0] + 1) || piece.dataset.id === String(array[1] + 1) || piece.dataset.id === String(array[2] + 1)) {
                 piece.style.backgroundColor = 'rgba(255, 255, 255, 1)';
             } else {
                 piece.style.backgroundColor = 'rgba(122, 115, 117, .75)';
