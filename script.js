@@ -5,6 +5,7 @@ const Player = (gamePiece) => {
     const name = `Player ${gamePiece}`;
     const player1Name = document.getElementById('player-O-name');
     const player2Name = document.getElementById('player-X-name');
+
     const setName = (newName, oldName) => {
         if (oldName === 'Player O') {
             player1Name.innerText = newName;
@@ -24,6 +25,7 @@ const Player = (gamePiece) => {
             player2Name.style.cursor = 'not-allowed';
         }
     }
+
     const updatePlayerName = (newName, oldName) => {
         if (oldName === 'Player O') {
             player1.name = newName;
@@ -33,6 +35,7 @@ const Player = (gamePiece) => {
             console.log(oldName + ' updated Player name to ' + newName);
         }
     }
+
     const icon = `img/Player${gamePiece}.png`;
 
     return {
@@ -63,6 +66,53 @@ const gameBoard = (() => {
 })();
 
 const gameFlow = (() => {
+    const winCombos = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [6, 4, 2]
+    ]    
+
+    const checkWin = (board, player) => {
+        let newBoard = [];
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            if (gameBoard.gameBoardArray[i] === '') {
+                newBoard.push(i + 1);
+            } else {
+                newBoard.push(gameBoard.gameBoardArray[i]);
+            }
+        }
+        let plays = board.reduce((a, e, i) =>
+        (e === player) ? a.concat(i) : a, []);
+        let gameWon = null;
+        for (let [index, win] of winCombos.entries()) {
+            if (win.every(elem => plays.indexOf(elem) > -1)) {
+                gameWon = { index: index, player: player };
+                break;
+            }
+        }
+        return gameWon;
+    }
+
+    const emptySpaces = () => {
+        return gameBoard.gameBoardArray.map((item, index) => {
+            if (item.length < 1) {
+                return index;
+            } 
+            }).filter(item => item);
+    }
+
+    const checkTie = () => {
+        if (emptySpaces().length == 0) {
+            return true;
+        }
+        return false;
+    }    
+
     const check = gameBoard.gameBoardArray;
     const checkForWinner = () => {
         if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
@@ -95,11 +145,14 @@ const gameFlow = (() => {
             console.log('No winner yet');
         }
     }
+
     let player1Score = 0;
     let player2Score = 0;
+
     const whoIsWinner = (gamePiece) => {
         if (gamePiece === 'tie') {
             console.log('Tie game!');
+
             displayController.displayWinner('tie');
         } else if (gamePiece === player1.marker) {
             player1Score += 1;
@@ -119,36 +172,7 @@ const gameFlow = (() => {
         } 
     }
     // Repetitive but useful for minimax function - checks winner without calling other functions
-    const winCombos = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [6, 4, 2]
-    ]    
-    const checkWin = (board, player) => {
-        let newBoard = [];
-        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
-            if (gameBoard.gameBoardArray[i] === '') {
-                newBoard.push(i + 1);
-            } else {
-                newBoard.push(gameBoard.gameBoardArray[i]);
-            }
-        }
-        let plays = board.reduce((a, e, i) =>
-        (e === player) ? a.concat(i) : a, []);
-        let gameWon = null;
-        for (let [index, win] of winCombos.entries()) {
-            if (win.every(elem => plays.indexOf(elem) > -1)) {
-                gameWon = { index: index, player: player };
-                break;
-            }
-        }
-        return gameWon;
-    }
+
 
     const checkIfWinner = (newBoard, player) => {
         if (newBoard[0] !== '' && newBoard[0] === newBoard[1] && newBoard[1] === newBoard[2]) {
@@ -177,8 +201,6 @@ const gameFlow = (() => {
         player1Score = 0;
         player2Score = 0;
     }
-    let huResult;
-    let cpuResult;
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
         console.log('CPU random index: ' + randomMove);
@@ -191,9 +213,8 @@ const gameFlow = (() => {
         }
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
-        // huResult = console.log(minimax(gameBoard.gameBoardArray, player1.marker));
-        // cpuResult = console.log(minimax(gameBoard.gameBoardArray, playerCPU.marker));
-        console.log(minimax(gameBoard.gameBoardArray, playerCPU));
+
+        // console.log(minimax(gameBoard.gameBoardArray, playerCPU));
         
         
 
@@ -201,29 +222,26 @@ const gameFlow = (() => {
         let img = document.createElement('img');
         img.src = playerCPU.icon;
         gamePiece.appendChild(img);
-        if (checkIfWinner(gameBoard.gameBoardArray, playerCPU) === true || checkIfWinner(gameBoard.gameBoardArray, player1) === true) {
+        if (checkWin(gameBoard.gameBoardArray, playerCPU.marker) !== null || checkWin(gameBoard.gameBoardArray, player1.marker) !== null || checkTie() === true) {
             displayController.stopCPUMarking();
         }
     }
     // Find gameBoard empty spaces for the minimax function
-    const emptySpaces = (array) => {
-        return gameBoard.gameBoardArray.map((item, index) => {
-            if (item.length < 1) {
-                return index;
-            } 
-            }).filter(item => item);
-    }
+    
+    
 
-    function emptySquares() {
+    const smartCPU = (oldBoard, player) => {
         let newBoard = [];
-        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
-            if (gameBoard.gameBoardArray[i] === '') {
+        for (let i = 0; i < oldBoard.length; i++) {
+            if (oldBoard[i] === '') {
                 newBoard.push(i + 1);
             } else {
-                newBoard.push(gameBoard.gameBoardArray[i]);
+                newBoard.push(oldBoard[i]);
             }
         }
-        return newBoard.filter(s => typeof s == 'number');
+
+
+
     }
 
     function minimax(oldBoard, player) {
@@ -285,69 +303,10 @@ const gameFlow = (() => {
         return moves[bestMove];
     }
 
-    const minimax2 = (oldBoard, player) => {
-        let openSpaces = emptySpaces();
-        let newBoard = [];
-        for (let i = 0; i < oldBoard.length; i++) {
-            if (oldBoard[i] === '') {
-                newBoard.push(i + 1);
-            } else {
-                newBoard.push(oldBoard[i]);
-            }
-        }
-
-        console.log(newBoard, checkWin(newBoard, player1.marker));
-        if (checkWin(newBoard, player1.marker)) {
-            return { score: -10 };
-        } else if (checkWin(newBoard, playerCPU.marker)) {
-            return { score: 10 };
-        } else if (openSpaces.length === 0) {
-            return { score: 0 };
-        }
-        
-        let moves = [];
-        for (let i = 0; i < openSpaces.length; i++) {
-            let move = {};
-            move.index = newBoard[openSpaces[i]];
-            newBoard[openSpaces[i]] = player.marker;
-            console.log(move, moves);
-            if (player == playerCPU) {
-                let result = minimax(newBoard, player1.marker);
-                move.score = result.score;
-
-            } else {
-                let result = minimax(newBoard, playerCPU.marker);;
-                move.score = result.score;
-            }
-            newBoard[openSpaces[i]] = move.index;
-            moves.push(move);
-        }
-        let bestMove;
-        if (player === playerCPU) {
-            let bestScore = -10000;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score > bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        } else {
-            let bestScore = 10000;
-            for (let i = 0; i < moves.length; i++) {
-                if (moves[i].score < bestScore) {
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        }
-        return console.log(moves[bestMove]);
-    }
-    
-
     return {
         checkForWinner,
         checkWin,
-        checkIfWinner,
+        checkTie,
         resetScore,
         cpuGamePlay,
         emptySpaces,
@@ -390,10 +349,11 @@ const displayController = (() => {
         let img = document.createElement('img');
         if (gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
             gameBoard.inputMove(player1.marker, gamePieceID);
+            console.log('hi');
             img.src = player1.icon;
             gamePiece.appendChild(img);
-            console.log(gameFlow.checkIfWinner(gameBoard.gameBoardArray, player1));
-            if (gameFlow.checkIfWinner(gameBoard.gameBoardArray, player1) !== true) {
+            console.log(gameFlow.checkWin(gameBoard.gameBoardArray, player1.marker), gameFlow.checkTie());
+            if (gameFlow.checkWin(gameBoard.gameBoardArray, player1.marker) === null && gameFlow.checkTie() === false) {
                 gameFlow.cpuGamePlay();
             } else {
                 stopCPUMarking();
@@ -450,11 +410,13 @@ const displayController = (() => {
         observer.observe(player1Name, config);
         observer.observe(player2Name, config);
     }
+    
     const player1Icon = document.getElementById('player-O-icon');
     let player2Icon;
     const playerCPUIcon = document.getElementById('player-CPU-icon');
     const player1IconOptions = document.getElementById('player-O-icon-options');
     const player2IconOptions = document.getElementById('player-X-icon-options');
+
     const updatePlayerIcon = () => {        
         const player1IconImgs = document.getElementsByClassName('player-O-icon-imgs');
         const player2IconImgs = document.getElementsByClassName('player-X-icon-imgs');
@@ -497,20 +459,24 @@ const displayController = (() => {
         }));
 
     }
+
     const updateScore = (player1Score, player2Score) => {
         const player1ScoreDOM = document.getElementById('score1');
         const player2ScoreDOM = document.getElementById('score2');
         player1ScoreDOM.innerText = player1Score;
         player2ScoreDOM.innerText = player2Score;
     }
+
     // Display the winner of each game
     const container = document.getElementById('container');
     const r = document.querySelector(':root');
     const pWinner = document.createElement('p');
     const pClickAnywhere = document.createElement('p');
+
     pWinner.setAttribute('id', 'p-winner');
     pClickAnywhere.setAttribute('id', 'p-click-anywhere');
     pClickAnywhere.innerText = '(click anywhere to play again)';
+
     const displayWinner = (winner) => {
         const winnerDiv = document.getElementById('winner');
         if (winner === 'O') {
@@ -531,9 +497,12 @@ const displayController = (() => {
         }
         winnerDiv.appendChild(pWinner);
         winnerDiv.appendChild(pClickAnywhere);
+        stopCPUMarking();
+
         stopMarking();
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
+    
     // Highlight the winning pieces' moves
     const displayWinningPieces = (piece1, piece2, piece3) => {
         Array.from(gamePieces).forEach(piece => {
@@ -544,6 +513,7 @@ const displayController = (() => {
             }
         });
     }
+
     const clearGamePieces = () => {
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
             gameBoard.gameBoardArray[i] = '';
@@ -552,7 +522,9 @@ const displayController = (() => {
             div.innerText = '';
         });
     }
+
     const playTypeButton = document.getElementById('play-type-button');
+
     const clearBoard = () => {
         window.addEventListener('mousedown', () => {
             r.style.setProperty('--game-board-color', '#8638A8');
@@ -576,6 +548,7 @@ const displayController = (() => {
             }
         }, {once : true});
     }
+
     const reset = () => {
         const resetDOM = document.getElementById('reset');
         resetDOM.addEventListener('mousedown', () => {
@@ -593,6 +566,7 @@ const displayController = (() => {
             playerCPUIcon.src = 'img/PlayerCPU.png';
         });
     }
+
     const easyHard = document.getElementById('easy-hard');
     const easyHardButton = document.getElementById('easy-hard-button');
     const changePlayType = () => {
