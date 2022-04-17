@@ -115,31 +115,16 @@ const gameFlow = (() => {
 
     const check = gameBoard.gameBoardArray;
     const checkForWinner = () => {
-        if (check[0] !== '' && check[0] === check[1] && check[1] === check[2]) {
-            whoIsWinner(check[0]);
+        if (checkWin(gameBoard.gameBoardArray, player1.marker)) {
+            whoIsWinner(player1.marker);
+            console.log(winCombos[checkWin(gameBoard.gameBoardArray, player1.marker).index])
             displayController.displayWinningPieces(0, 1, 2);
-        } else if (check[3] !== '' && check[3] === check[4] && check[4] === check[5]) {
-            whoIsWinner(check[3]);
-            displayController.displayWinningPieces(3, 4, 5);
-        } else if (check[6] !== '' && check[6] === check[7] && check[7] === check[8]) {
-            whoIsWinner(check[6]);
-            displayController.displayWinningPieces(6, 7, 8);
-        } else if (check[0] !== '' && check[0] === check[3] && check[3] === check[6]) {
-            whoIsWinner(check[0]);
-            displayController.displayWinningPieces(0, 3, 6);
-        } else if (check[1] !== '' && check[1] === check[4] && check[4] === check[7]) {
-            whoIsWinner(check[1]);
-            displayController.displayWinningPieces(1, 4, 7);
-        } else if (check[2] !== '' && check[2] === check[5] && check[5] === check[8]) {
-            whoIsWinner(check[2]);
-            displayController.displayWinningPieces(2, 5, 8);
-        } else if (check[0] !== '' && check[0] === check[4] && check[4] === check[8]) {
-            whoIsWinner(check[0]);
-            displayController.displayWinningPieces(0, 4, 8);
-        } else if (check[2] !== '' && check[2] === check[4] && check[4] === check[6]) {
-            whoIsWinner(check[2]);
-            displayController.displayWinningPieces(2, 4, 6);
-        } else if (check[0] !== '' && check[1] !== '' && check[2] !== '' && check[3] !== '' && check[4] !== '' && check[5] !== '' && check[6] !== '' && check[7] !== ''  && check[8] !== '') {
+        } else if (checkWin(gameBoard.gameBoardArray, player2.marker)) {
+            whoIsWinner(player2.marker);
+        } else if (checkWin(gameBoard.gameBoardArray, playerCPU.marker)) {
+            whoIsWinner(playerCPU.marker);
+
+        } else if (checkTie() === true) {
             whoIsWinner('tie');
         } else {
             console.log('No winner yet');
@@ -152,7 +137,6 @@ const gameFlow = (() => {
     const whoIsWinner = (gamePiece) => {
         if (gamePiece === 'tie') {
             console.log('Tie game!');
-
             displayController.displayWinner('tie');
         } else if (gamePiece === player1.marker) {
             player1Score += 1;
@@ -171,32 +155,7 @@ const gameFlow = (() => {
             console.log(playerCPU.name + ' wins!', player2Score);
         } 
     }
-    // Repetitive but useful for minimax function - checks winner without calling other functions
 
-
-    const checkIfWinner = (newBoard, player) => {
-        if (newBoard[0] !== '' && newBoard[0] === newBoard[1] && newBoard[1] === newBoard[2]) {
-            return true;
-        } else if (newBoard[3] !== '' && newBoard[3] === newBoard[4] && newBoard[4] === newBoard[5]) {
-            return true;
-        } else if (newBoard[6] !== '' && newBoard[6] === newBoard[7] && newBoard[7] === newBoard[8]) {
-            return true;
-        } else if (newBoard[0] !== '' && newBoard[0] === newBoard[3] && newBoard[3] === newBoard[6]) {
-            return true;
-        } else if (newBoard[1] !== '' && newBoard[1] === newBoard[4] && newBoard[4] === newBoard[7]) {
-            return true;
-        } else if (newBoard[2] !== '' && newBoard[2] === newBoard[5] && newBoard[5] === newBoard[8]) {
-            return true;
-        } else if (newBoard[0] !== '' && newBoard[0] === newBoard[4] && newBoard[4] === newBoard[8]) {
-            return true;
-        } else if (newBoard[2] !== '' && newBoard[2] === newBoard[4] && newBoard[4] === newBoard[6]) {
-            return true;
-        } else if (newBoard[0] !== '' && newBoard[1] !== '' && newBoard[2] !== '' && newBoard[3] !== '' && newBoard[4] !== '' && newBoard[5] !== '' && newBoard[6] !== '' && newBoard[7] !== ''  && newBoard[8] !== '') {
-            return true;
-        } else {
-            return false;
-        }
-    }
     const resetScore = () => {
         player1Score = 0;
         player2Score = 0;
@@ -216,8 +175,6 @@ const gameFlow = (() => {
 
         // console.log(minimax(gameBoard.gameBoardArray, playerCPU));
         
-        
-
         gameBoard.inputMove(playerCPU.marker, randomMove + 1);
         let img = document.createElement('img');
         img.src = playerCPU.icon;
@@ -226,9 +183,8 @@ const gameFlow = (() => {
             displayController.stopCPUMarking();
         }
     }
-    // Find gameBoard empty spaces for the minimax function
     
-    
+
 
     const smartCPU = (oldBoard, player) => {
         let newBoard = [];
@@ -349,7 +305,6 @@ const displayController = (() => {
         let img = document.createElement('img');
         if (gameBoard.gameBoardArray[gamePiece.dataset.id - 1] === '') {
             gameBoard.inputMove(player1.marker, gamePieceID);
-            console.log('hi');
             img.src = player1.icon;
             gamePiece.appendChild(img);
             console.log(gameFlow.checkWin(gameBoard.gameBoardArray, player1.marker), gameFlow.checkTie());
@@ -497,8 +452,6 @@ const displayController = (() => {
         }
         winnerDiv.appendChild(pWinner);
         winnerDiv.appendChild(pClickAnywhere);
-        stopCPUMarking();
-
         stopMarking();
         window.addEventListener('mousedown', clearBoard, {once : true})
     }
