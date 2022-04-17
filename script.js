@@ -78,14 +78,6 @@ const gameFlow = (() => {
     ]    
 
     const checkWin = (board, player) => {
-        let newBoard = [];
-        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
-            if (gameBoard.gameBoardArray[i] === '') {
-                newBoard.push(i + 1);
-            } else {
-                newBoard.push(gameBoard.gameBoardArray[i]);
-            }
-        }
         let plays = board.reduce((a, e, i) =>
         (e === player) ? a.concat(i) : a, []);
         let gameWon = null;
@@ -173,16 +165,18 @@ const gameFlow = (() => {
         return randomSpot;
     }
 
-    const cpuGamePlay = () => {
-        let randomSpot = randomMove();
-        let gamePieces = document.querySelectorAll('div[data-id]');
-        let gamePiece = gamePieces[randomSpot];
-
+    const cpuGamePlay = () => {        
         const easyHardButton = document.getElementById('easy-hard-button');
+        let gamePieces = document.querySelectorAll('div[data-id]');
+        let gamePiece;
         if (easyHardButton.checked === true) {
-            console.log('smartCPU mode');
-            smartCPU();
+            let smartMove = smartCPU();
+            console.log('smartCPU move index: ' + smartMove);
+            gamePiece = gamePieces[smartMove];
+            gameBoard.inputMove(playerCPU.marker, smartMove);
         } else {
+            let randomSpot = randomMove();
+            gamePiece = gamePieces[randomSpot];
             gameBoard.inputMove(playerCPU.marker, randomSpot);
         }
         let img = document.createElement('img');
@@ -194,14 +188,30 @@ const gameFlow = (() => {
     }
     
     const smartCPU = () => {
-        if (gameBoard.gameBoardArray[4] === '') {
-            gameBoard.inputMove(playerCPU.marker, 4)
-        } else if (gameBoard.gameBoardArray[4] !== '') {
-            gameBoard.inputMove(playerCPU.marker, 0)
+        let newBoard = [];
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            if (gameBoard.gameBoardArray[i] === '') {
+                newBoard.push(i);
+            } else {
+                newBoard.push(gameBoard.gameBoardArray[i]);
+            }
         }
 
-        let randomSpot = randomMove();
-        gameBoard.inputMove(playerCPU.marker, randomSpot);
+        console.log(newBoard);
+
+        if (gameBoard.gameBoardArray[4] === '') {
+            return 4;
+        } else if (gameBoard.gameBoardArray[0] === '' && gameBoard.gameBoardArray[4] !== '') {
+            return 0;
+        } else {
+
+            for (let [index, win] of winCombos.entries()) {
+                console.log(index, win);
+                
+            }
+
+            return randomMove();
+        }
 
     }
 
