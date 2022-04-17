@@ -119,42 +119,66 @@ const gameFlow = (() => {
         } 
     }
     // Repetitive but useful for minimax function - checks winner without calling other functions
-    const checkIfWinner = (newBoard, player) => {
-        function boardCheck() {
-            if (newBoard[0] !== '' && newBoard[0] === newBoard[1] && newBoard[1] === newBoard[2]) {
-                return newBoard[0];
-            } else if (newBoard[3] !== '' && newBoard[3] === newBoard[4] && newBoard[4] === newBoard[5]) {
-                return newBoard[3];
-            } else if (newBoard[6] !== '' && newBoard[6] === newBoard[7] && newBoard[7] === newBoard[8]) {
-                return newBoard[6];
-            } else if (newBoard[0] !== '' && newBoard[0] === newBoard[3] && newBoard[3] === newBoard[6]) {
-                return newBoard[0];
-            } else if (newBoard[1] !== '' && newBoard[1] === newBoard[4] && newBoard[4] === newBoard[7]) {
-                return newBoard[1];
-            } else if (newBoard[2] !== '' && newBoard[2] === newBoard[5] && newBoard[5] === newBoard[8]) {
-                return newBoard[2];
-            } else if (newBoard[0] !== '' && newBoard[0] === newBoard[4] && newBoard[4] === newBoard[8]) {
-                return newBoard[0];
-            } else if (newBoard[2] !== '' && newBoard[2] === newBoard[4] && newBoard[4] === newBoard[6]) {
-                return newBoard[2];
-            } else if (newBoard[0] !== '' && newBoard[1] !== '' && newBoard[2] !== '' && newBoard[3] !== '' && newBoard[4] !== '' && newBoard[5] !== '' && newBoard[6] !== '' && newBoard[7] !== ''  && newBoard[8] !== '') {
-                return true;
+    const winCombos = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [6, 4, 2]
+    ]    
+    const checkWin = (board, player) => {
+        let newBoard = [];
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            if (gameBoard.gameBoardArray[i] === '') {
+                newBoard.push(i + 1);
             } else {
-                return false;
+                newBoard.push(gameBoard.gameBoardArray[i]);
             }
         }
-        if (boardCheck() !== false) {
-            if (boardCheck() === player.marker || boardCheck() === true) {
-                return true;
-            } 
-        } else {
-            return false;    
+        let plays = board.reduce((a, e, i) =>
+        (e === player) ? a.concat(i) : a, []);
+        let gameWon = null;
+        for (let [index, win] of winCombos.entries()) {
+            if (win.every(elem => plays.indexOf(elem) > -1)) {
+                gameWon = { index: index, player: player };
+                break;
+            }
         }
-    }    
+        return gameWon;
+    }
+
+    const checkIfWinner = (newBoard, player) => {
+        if (newBoard[0] !== '' && newBoard[0] === newBoard[1] && newBoard[1] === newBoard[2]) {
+            return true;
+        } else if (newBoard[3] !== '' && newBoard[3] === newBoard[4] && newBoard[4] === newBoard[5]) {
+            return true;
+        } else if (newBoard[6] !== '' && newBoard[6] === newBoard[7] && newBoard[7] === newBoard[8]) {
+            return true;
+        } else if (newBoard[0] !== '' && newBoard[0] === newBoard[3] && newBoard[3] === newBoard[6]) {
+            return true;
+        } else if (newBoard[1] !== '' && newBoard[1] === newBoard[4] && newBoard[4] === newBoard[7]) {
+            return true;
+        } else if (newBoard[2] !== '' && newBoard[2] === newBoard[5] && newBoard[5] === newBoard[8]) {
+            return true;
+        } else if (newBoard[0] !== '' && newBoard[0] === newBoard[4] && newBoard[4] === newBoard[8]) {
+            return true;
+        } else if (newBoard[2] !== '' && newBoard[2] === newBoard[4] && newBoard[4] === newBoard[6]) {
+            return true;
+        } else if (newBoard[0] !== '' && newBoard[1] !== '' && newBoard[2] !== '' && newBoard[3] !== '' && newBoard[4] !== '' && newBoard[5] !== '' && newBoard[6] !== '' && newBoard[7] !== ''  && newBoard[8] !== '') {
+            return true;
+        } else {
+            return false;
+        }
+    }
     const resetScore = () => {
         player1Score = 0;
         player2Score = 0;
     }
+    let huResult;
+    let cpuResult;
     const cpuGamePlay = () => {
         let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
         console.log('CPU random index: ' + randomMove);
@@ -167,9 +191,12 @@ const gameFlow = (() => {
         }
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece = gamePieces[randomMove];
-        // let huResult = console.log(minimax(gameBoard.gameBoardArray, player1.marker));
-        // let cpuResult = console.log(minimax(gameBoard.gameBoardArray, playerCPU.marker));
+        // huResult = console.log(minimax(gameBoard.gameBoardArray, player1.marker));
+        // cpuResult = console.log(minimax(gameBoard.gameBoardArray, playerCPU.marker));
         console.log(minimax(gameBoard.gameBoardArray, playerCPU));
+        
+        
+
         gameBoard.inputMove(playerCPU.marker, randomMove + 1);
         let img = document.createElement('img');
         img.src = playerCPU.icon;
@@ -186,77 +213,140 @@ const gameFlow = (() => {
             } 
             }).filter(item => item);
     }
-    function loop(x) {
-        if (x >= 5) {
-            return;
-    const minimax = (oldBoard, player) => {
-            
-            
-              
-                let openSpaces = emptySpaces();
-                let newBoard = [];
-                for (let i = 0; i < oldBoard.length; i++) {
-                    if (oldBoard[i] === '') {
-                        newBoard.push(i + 1);
-                    } else {
-                        newBoard.push(oldBoard[i]);
-                    }
-                }
 
-                console.log(newBoard, checkIfWinner(oldBoard, player1));
-                if (checkIfWinner(oldBoard, player1) === true) {
-                    return { score: -10 };
-                } else if (checkIfWinner(oldBoard, playerCPU) === true) {
-                    return { score: 10 };
-                } else if (openSpaces.length === 0) {
-                    return { score: 0 };
-                }
-
-                let moves = [];
-                for (let i = 0; i < openSpaces.length; i++) {
-                    let move = {};
-                    move.index = newBoard[openSpaces[i]];
-                    newBoard[openSpaces[i]] = player.marker;
-                    if (player == playerCPU) {
-                        let result = minimax(gameBoard.gameBoardArray, player1);
-                        move.score = result.score;
-
-                    } else {
-                        let result = minimax(gameBoard.gameBoardArray, playerCPU);                ;
-                        move.score = result.score;
-                    }
-                    newBoard[openSpaces[i]] = move.index;
-                    moves.push(move);
-                }
-                let bestMove;
-                if (player === playerCPU) {
-                    let bestScore = -10000;
-                    for (let i = 0; i < moves.length; i++) {
-                        if (moves[i].score > bestScore) {
-                            bestScore = moves[i].score;
-                            bestMove = i;
-                        }
-                    }
-                } else {
-                    let bestScore = 10000;
-                    for (let i = 0; i < moves.length; i++) {
-                        if (moves[i].score < bestScore) {
-                            bestScore = moves[i].score;
-                            bestMove = i;
-                        }
-                    }
-                }
-                return console.log(moves[bestMove]);
+    function emptySquares() {
+        let newBoard = [];
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            if (gameBoard.gameBoardArray[i] === '') {
+                newBoard.push(i + 1);
+            } else {
+                newBoard.push(gameBoard.gameBoardArray[i]);
             }
         }
+        return newBoard.filter(s => typeof s == 'number');
+    }
+
+    function minimax(oldBoard, player) {
+        let newBoard = [];
+        for (let i = 0; i < oldBoard.length; i++) {
+            if (oldBoard[i] === '') {
+                newBoard.push(i + 1);
+            } else {
+                newBoard.push(oldBoard[i]);
+            }
+        }
+        var availSpots = emptySquares();
+    
+        if (checkWin(newBoard, player1.marker)) {
+            return { score: -10 };
+        } else if (checkWin(newBoard, playerCPU.marker)) {
+            return { score: 10 };
+        } else if (availSpots.length === 0) {
+            return { score: 0 };
+        }
+        var moves = [];
+        for (var i = 0; i < availSpots.length; i++) {
+            var move = {};
+            move.index = newBoard[availSpots[i]];
+            newBoard[availSpots[i]] = player;
+    
+            if (player == playerCPU) {
+                var result = minimax(newBoard, player1);
+                move.score = result.score;
+            } else {
+                var result = minimax(newBoard, playerCPU);
+                move.score = result.score;
+            }
+    
+            newBoard[availSpots[i]] = move.index;
+    
+            moves.push(move);
+        }
+    
+        var bestMove;
+        if (player === aiPlayer) {
+            var bestScore = -10000;
+            for (var i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        } else {
+            var bestScore = 10000;
+            for (var i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+    
+        return moves[bestMove];
+    }
+
+    const minimax2 = (oldBoard, player) => {
+        let openSpaces = emptySpaces();
+        let newBoard = [];
+        for (let i = 0; i < oldBoard.length; i++) {
+            if (oldBoard[i] === '') {
+                newBoard.push(i + 1);
+            } else {
+                newBoard.push(oldBoard[i]);
+            }
+        }
+
+        console.log(newBoard, checkWin(newBoard, player1.marker));
+        if (checkWin(newBoard, player1.marker)) {
+            return { score: -10 };
+        } else if (checkWin(newBoard, playerCPU.marker)) {
+            return { score: 10 };
+        } else if (openSpaces.length === 0) {
+            return { score: 0 };
+        }
         
-        loop(x + 1);
+        let moves = [];
+        for (let i = 0; i < openSpaces.length; i++) {
+            let move = {};
+            move.index = newBoard[openSpaces[i]];
+            newBoard[openSpaces[i]] = player.marker;
+            console.log(move, moves);
+            if (player == playerCPU) {
+                let result = minimax(newBoard, player1.marker);
+                move.score = result.score;
+
+            } else {
+                let result = minimax(newBoard, playerCPU.marker);;
+                move.score = result.score;
+            }
+            newBoard[openSpaces[i]] = move.index;
+            moves.push(move);
+        }
+        let bestMove;
+        if (player === playerCPU) {
+            let bestScore = -10000;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score > bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        } else {
+            let bestScore = 10000;
+            for (let i = 0; i < moves.length; i++) {
+                if (moves[i].score < bestScore) {
+                    bestScore = moves[i].score;
+                    bestMove = i;
+                }
+            }
+        }
+        return console.log(moves[bestMove]);
     }
     
-    loop(0);
 
     return {
         checkForWinner,
+        checkWin,
         checkIfWinner,
         resetScore,
         cpuGamePlay,
