@@ -159,25 +159,31 @@ const gameFlow = (() => {
         player1Score = 0;
         player2Score = 0;
     }
-    const cpuGamePlay = () => {
-        let randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
-        console.log('CPU random index: ' + randomMove);
+
+    const randomMove = () => {
+        let randomSpot = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
+        console.log('CPU random index: ' + randomSpot);
         for (let i = 0; i < 100; i++) {
-            if (gameBoard.gameBoardArray[randomMove] !== '') {
+            if (gameBoard.gameBoardArray[randomSpot] !== '') {
                 console.log('CPU roll again');
-                randomMove = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
-                console.log('CPU random index: ' + randomMove);
+                randomSpot = Math.floor(Math.random()*gameBoard.gameBoardArray.length);
+                console.log('CPU random index: ' + randomSpot);
             } 
         }
+        return randomSpot;
+    }
+
+    const cpuGamePlay = () => {
+        let randomSpot = randomMove();
         let gamePieces = document.querySelectorAll('div[data-id]');
-        let gamePiece = gamePieces[randomMove];
+        let gamePiece = gamePieces[randomSpot];
 
         const easyHardButton = document.getElementById('easy-hard-button');
         if (easyHardButton.checked === true) {
-        //  gameBoard.inputMove(playerCPU.marker, smartCPU.index);
-            gameBoard.inputMove(playerCPU.marker, randomMove);
+            console.log('smartCPU mode');
+            smartCPU();
         } else {
-            gameBoard.inputMove(playerCPU.marker, randomMove);
+            gameBoard.inputMove(playerCPU.marker, randomSpot);
         }
         let img = document.createElement('img');
         img.src = playerCPU.icon;
@@ -188,17 +194,15 @@ const gameFlow = (() => {
     }
     
     const smartCPU = () => {
-        let newBoard = [];
-        for (let i = 0; i < oldBoard.length; i++) {
-            if (oldBoard[i] === '') {
-                newBoard.push(i + 1);
-            } else {
-                newBoard.push(oldBoard[i]);
-            }
-        }
         if (gameBoard.gameBoardArray[4] === '') {
             gameBoard.inputMove(playerCPU.marker, 4)
+        } else if (gameBoard.gameBoardArray[4] !== '') {
+            gameBoard.inputMove(playerCPU.marker, 0)
         }
+
+        let randomSpot = randomMove();
+        gameBoard.inputMove(playerCPU.marker, randomSpot);
+
     }
 
     function minimax(oldBoard, player) {
@@ -503,12 +507,17 @@ const displayController = (() => {
         }, {once : true});
     }
 
+    const easyHard = document.getElementById('easy-hard');
+    const easyHardButton = document.getElementById('easy-hard-button');
     const reset = () => {
         const resetDOM = document.getElementById('reset');
         resetDOM.addEventListener('mousedown', () => {
             gameFlow.resetScore();
             updateScore(0, 0);
             clearBoard();
+            if (easyHardButton.checked === true) {
+                easyHardButton.checked = false;
+            }
             player1IconOptions.style.opacity = '';
             player2IconOptions.style.opacity = '';
             playTypeButton.checked = false;
@@ -521,8 +530,13 @@ const displayController = (() => {
         });
     }
 
-    const easyHard = document.getElementById('easy-hard');
-    const easyHardButton = document.getElementById('easy-hard-button');
+    easyHardButton.addEventListener('change', () => {
+        console.log('Hard mode activated');
+        clearGamePieces();
+        console.log(gameBoard.gameBoardArray);
+
+    })
+
     const changePlayType = () => {
         playTypeButton.addEventListener('change', () => {
             if (playTypeButton.checked === true) {
@@ -541,6 +555,7 @@ const displayController = (() => {
                 player2Icon.src = player2.icon;
                 player2Icon.style.pointerEvents = 'auto';     
                 cpuGameDisplay();
+                console.log(gameBoard.gameBoardArray);
             }
             else {
                 clearGamePieces();     
@@ -558,6 +573,7 @@ const displayController = (() => {
                 easyHard.style.pointerEvents = 'auto';
                 easyHardButton.checked = false;
                 cpuGameDisplay();
+                console.log(gameBoard.gameBoardArray);
             }
         });
     }
