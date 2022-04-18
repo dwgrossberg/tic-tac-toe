@@ -165,6 +165,11 @@ const gameFlow = (() => {
         return randomSpot;
     }
 
+    let turnCounter = 0;
+    const resetTurnCounter = () => {
+        turnCounter = 0;
+    }
+
     const cpuGamePlay = () => {        
         const easyHardButton = document.getElementById('easy-hard-button');
         let gamePieces = document.querySelectorAll('div[data-id]');
@@ -181,6 +186,7 @@ const gameFlow = (() => {
         }
         let img = document.createElement('img');
         img.src = playerCPU.icon;
+        console.log(img);
         gamePiece.appendChild(img);
         if (checkWin(gameBoard.gameBoardArray, playerCPU.marker) !== null || checkWin(gameBoard.gameBoardArray, player1.marker) !== null || checkTie() === true) {
             displayController.stopCPUMarking();
@@ -197,23 +203,27 @@ const gameFlow = (() => {
             }
         }
 
-        console.log(newBoard);
+        console.log('Turn counter: ' + turnCounter);
 
-        if (gameBoard.gameBoardArray[4] === '') {
-            return 4;
-        } else if (gameBoard.gameBoardArray[0] === '' && gameBoard.gameBoardArray[4] !== '') {
-            return 0;
-        } else {
-
-            for (let [index, win] of winCombos.entries()) {
-                console.log(index, win);
-                
+        if (turnCounter === 0) {
+            if (gameBoard.gameBoardArray[4] === '') {
+                turnCounter++;
+                return 4;
+            } else if (gameBoard.gameBoardArray[0] === '' && gameBoard.gameBoardArray[4] !== '') {
+                turnCounter++;
+                return 0;
             }
-
+        } else if (turnCounter >= 1) {
+            turnCounter++;
             return randomMove();
         }
+            // for (let [index, win] of winCombos.entries()) {
+                // console.log(index, win);   
+            // }
+        
 
-    }
+        }
+    
 
     function minimax(oldBoard, player) {
         let newBoard = [];
@@ -279,9 +289,9 @@ const gameFlow = (() => {
         checkWin,
         checkTie,
         resetScore,
+        resetTurnCounter,
         cpuGamePlay,
-        emptySpaces,
-        minimax
+        emptySpaces
     }
 })();
 
@@ -483,6 +493,7 @@ const displayController = (() => {
     }
 
     const clearGamePieces = () => {
+        gameFlow.resetTurnCounter();
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
             gameBoard.gameBoardArray[i] = '';
         };
