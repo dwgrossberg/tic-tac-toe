@@ -92,9 +92,7 @@ const gameFlow = (() => {
 
     const emptySpaces = () => {
         return gameBoard.gameBoardArray.map((item, index) => {
-            console.log(item, index);
             if (item.length < 1) {
-                console.log(index);
                 return index;
             } 
             }).filter(item => item || item === 0);
@@ -219,22 +217,28 @@ const gameFlow = (() => {
         } else if (turnCounter >= 1) {
             for (index in emptyMoves) {
                 console.log(emptyMoves[index]);
-                let newBoard = [];
+                let huBoard = [];
+                let cpuBoard = [];
                 for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
                     if (gameBoard.gameBoardArray[i] === '') {
-                        newBoard.push(i);
+                        huBoard.push(i);
+                        cpuBoard.push(i);
                     } else {
-                        newBoard.push(gameBoard.gameBoardArray[i]);
+                        huBoard.push(gameBoard.gameBoardArray[i]);
+                        cpuBoard.push(gameBoard.gameBoardArray[i]);
                     }
                 }
                 // run each marker through each empty space
                 // check if there is a potential winner
-                newBoard[emptyMoves[index]] = playerCPU.marker;
+                huBoard[emptyMoves[index]] = player1.marker;
+                cpuBoard[emptyMoves[index]] = playerCPU.marker;
                 console.log(emptyMoves[index], newBoard);
-
+                if (checkWin(cpuBoard, playerCPU.marker) !== null) {
+                    return emptyMoves[index];
+                } else if (checkWin(huBoard, player1.marker) !== null) {
+                    return emptyMoves[index];
+                }
             }
-            
-        
             return randomMove();
 
         }
