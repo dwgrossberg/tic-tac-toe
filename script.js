@@ -175,7 +175,7 @@ const gameFlow = (() => {
         let gamePieces = document.querySelectorAll('div[data-id]');
         let gamePiece;
         if (easyHardButton.checked === true) {
-            let smartMove = smartCPU();
+            let smartMove = smartishCPU();
             console.log('smartCPU move index: ' + smartMove);
             gamePiece = gamePieces[smartMove];
             gameBoard.inputMove(playerCPU.marker, smartMove);
@@ -191,6 +191,34 @@ const gameFlow = (() => {
             displayController.stopCPUMarking();
         }
     }
+
+    const smartishCPU = () => {
+        let newBoard = [];
+        for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+            if (gameBoard.gameBoardArray[i] === '') {
+                newBoard.push(i);
+            } else {
+                newBoard.push(gameBoard.gameBoardArray[i]);
+            }
+        }
+        let emptyMoves = emptySpaces();
+        console.log(emptyMoves);
+
+        if (turnCounter === 0) {
+            if (gameBoard.gameBoardArray[4] === '') {
+                turnCounter++;
+                return 4;
+            } else if (gameBoard.gameBoardArray[0] === '' && gameBoard.gameBoardArray[4] !== '') {
+                turnCounter++;
+                return 0;
+            }
+        } else if (turnCounter >= 1) {
+        
+        return randomMove();
+
+        }
+    }
+
     
     const smartCPU = () => {
         const winCombosCopy = [
@@ -214,6 +242,7 @@ const gameFlow = (() => {
         console.log('Turn counter: ' + turnCounter);
         let winSet = [];
         let map;
+        // The first move is a simple if / else choice, with the cpu always playing second
         if (turnCounter === 0) {
             if (gameBoard.gameBoardArray[4] === '') {
                 turnCounter++;
@@ -247,7 +276,36 @@ const gameFlow = (() => {
                                     prev[cur] = (prev[cur] || 0) + 1;
                                     return prev;
                                 }, {});
-                                console.log(map);
+                                // store the empty index numbers
+                               
+                                for (i in map) {
+                                    console.log('index: ' + i);
+                                    index = i;
+                                }
+                                
+
+                                if (map.CPU === 2 && map.O === undefined) {
+                                    // find the array item that is a number and return it as an index 
+                                    let index = win.filter(i => typeof i === 'number');
+                                    console.log('playerCPU 2', win, index[0]);
+                                    return index[0];
+                                } else if (map.O === 2 && map.CPU === undefined) {
+                                    console.log(map.CPU);
+                                    let index = win.filter(i => typeof i === 'number');
+                                    console.log('playerO 2', win, index[0]);
+                                    return index[0];
+                                } else if (map.CPU === 1 && map.O === undefined) {
+                                    let index = win.filter(i => typeof i === 'number');
+                                    console.log('playerCPU 1 && playerO none', index);
+                                    return index[0];
+                                } else if (map.CPU === undefined && map.O === undefined) {
+                                    console.log('open array', index);
+                                    let index = win.filter(i => typeof i === 'number');
+                                    return index[0];
+                                }
+                                  
+
+
                             }
                         }
                     }
@@ -258,7 +316,7 @@ const gameFlow = (() => {
             }
             
             
-
+            
             turnCounter++;
             return randomMove();
         }
@@ -374,7 +432,6 @@ const displayController = (() => {
             gameBoard.inputMove(player1.marker, gamePieceID - 1);
             img.src = player1.icon;
             gamePiece.appendChild(img);
-            console.log(gameFlow.checkWin(gameBoard.gameBoardArray, player1.marker), gameFlow.checkTie());
             if (gameFlow.checkWin(gameBoard.gameBoardArray, player1.marker) === null && gameFlow.checkTie() === false) {
                 gameFlow.cpuGamePlay();
             } else {
