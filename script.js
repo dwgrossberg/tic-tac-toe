@@ -186,7 +186,6 @@ const gameFlow = (() => {
         }
         let img = document.createElement('img');
         img.src = playerCPU.icon;
-        console.log(img);
         gamePiece.appendChild(img);
         if (checkWin(gameBoard.gameBoardArray, playerCPU.marker) !== null || checkWin(gameBoard.gameBoardArray, player1.marker) !== null || checkTie() === true) {
             displayController.stopCPUMarking();
@@ -194,6 +193,16 @@ const gameFlow = (() => {
     }
     
     const smartCPU = () => {
+        const winCombosCopy = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [6, 4, 2]
+        ]    
         let newBoard = [];
         for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
             if (gameBoard.gameBoardArray[i] === '') {
@@ -202,9 +211,9 @@ const gameFlow = (() => {
                 newBoard.push(gameBoard.gameBoardArray[i]);
             }
         }
-
         console.log('Turn counter: ' + turnCounter);
-
+        let winSet = [];
+        let map;
         if (turnCounter === 0) {
             if (gameBoard.gameBoardArray[4] === '') {
                 turnCounter++;
@@ -214,15 +223,48 @@ const gameFlow = (() => {
                 return 0;
             }
         } else if (turnCounter >= 1) {
+            // Loop through win combos to get winning sets
+            for (let [index, win] of winCombosCopy.entries()) {
+                console.log(index, win);
+                // Loop through winning sets to get winning move indexes
+                for (move in win) {
+                    // Identify winning sets that contain a player's marker
+                    if (typeof newBoard[win[move]] !== 'number') {
+                        let winMove = {};
+                        winMove.marker = newBoard[win[move]];
+                        winMove.index = win[move];
+                        winSet.push(winMove);
+                    }
+                    // Remove duplicate objects from the winSet array
+                    let filtedWinSet = winSet.filter((tag, index, array) => array.findIndex(t => t.marker == tag.marker && t.index == tag.index) == index);
+                    for (let i = 0; i < filtedWinSet.length; i++) {
+                        // If filter win index matches a winning move, insert move to test win combos
+                        if (filtedWinSet[i].index === win[move]) {
+                            win[move]= filtedWinSet[i].marker;
+                            if (winCombosCopy.some(elem => elem !== 'number')) {
+                                console.log(win);
+                                map = win.reduce(function(prev, cur) {
+                                    prev[cur] = (prev[cur] || 0) + 1;
+                                    return prev;
+                                }, {});
+                                console.log(map);
+                            }
+                        }
+                    }
+                }
+                
+                
+                
+            }
+            
+            
+
             turnCounter++;
             return randomMove();
         }
-            // for (let [index, win] of winCombos.entries()) {
-                // console.log(index, win);   
-            // }
-        
+    
 
-        }
+    }
     
 
     function minimax(oldBoard, player) {
