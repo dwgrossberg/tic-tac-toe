@@ -92,10 +92,12 @@ const gameFlow = (() => {
 
     const emptySpaces = () => {
         return gameBoard.gameBoardArray.map((item, index) => {
+            console.log(item, index);
             if (item.length < 1) {
+                console.log(index);
                 return index;
             } 
-            }).filter(item => item);
+            }).filter(item => item || item === 0);
     }
 
     const checkTie = () => {
@@ -201,7 +203,9 @@ const gameFlow = (() => {
                 newBoard.push(gameBoard.gameBoardArray[i]);
             }
         }
+        
         let emptyMoves = emptySpaces();
+        const boardCopy = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         console.log(emptyMoves);
 
         if (turnCounter === 0) {
@@ -213,8 +217,25 @@ const gameFlow = (() => {
                 return 0;
             }
         } else if (turnCounter >= 1) {
+            for (index in emptyMoves) {
+                console.log(emptyMoves[index]);
+                let newBoard = [];
+                for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+                    if (gameBoard.gameBoardArray[i] === '') {
+                        newBoard.push(i);
+                    } else {
+                        newBoard.push(gameBoard.gameBoardArray[i]);
+                    }
+                }
+                // run each marker through each empty space
+                // check if there is a potential winner
+                newBoard[emptyMoves[index]] = playerCPU.marker;
+                console.log(emptyMoves[index], newBoard);
+
+            }
+            
         
-        return randomMove();
+            return randomMove();
 
         }
     }
