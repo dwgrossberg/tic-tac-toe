@@ -250,10 +250,6 @@ const gameFlow = (() => {
                 return 1;
             } else if (gameBoard.gameBoardArray[3] === '') {
                 return 3;
-            } else if (gameBoard.gameBoardArray[5] === '') { 
-                return 5;
-            } else if (gameBoard.gameBoardArray[7] === '') { 
-                return 7;
                 // Otherwise return a valid randomMove
             } else {
                 return randomMove();
