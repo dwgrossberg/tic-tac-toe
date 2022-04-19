@@ -71,7 +71,7 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    width: 180px;
+    width: 185px;
     height: 30px;
     background-color: #F2FCEE;
     border-radius: 5px;
@@ -102,7 +102,7 @@ body {
 
 .player1,
 .player2 {
-    width: 180px;
+    width: 185px;
     height: 65px;
     display: flex;
     align-items: center;
@@ -133,7 +133,7 @@ body {
 
 .score {
     font-size: 34px;
-    width: 25px;
+    width: 30px;
 }
 
 .profile {
