@@ -192,11 +192,11 @@ const gameFlow = (() => {
         }
     }
 
-    // My smart AI bot solution - without using minimax function
+    // My smartish AI bot solution - without using the minimax function.
     const smartishCPU = () => {
         let emptyMoves = emptySpaces();
         console.log(emptyMoves);
-        // First move is either the middle space or the top left corner, depending on what player1 chooses
+        // First move is either the middle space or the top left corner, depending on what player1 chooses (first piece of human logic)
         if (turnCounter === 0) {
             if (gameBoard.gameBoardArray[4] === '') {
                 turnCounter++;
@@ -205,12 +205,12 @@ const gameFlow = (() => {
                 turnCounter++;
                 return 0;
             }
-        // Second move and all subsequent moves follow the conditions below:
-        // First check if playerCPU can make a winning move on the gameBoard
+        // Second and all subsequent moves follow the general conditions below:
+        // First check if playerCPU can make a winning move on the current gameBoard
         } else if (turnCounter >= 1) {
-            // Iterate through the emptyMoves arraye
+            // Iterate through the emptyMoves array
             for (index in emptyMoves) {
-                // Create a variable array to store a test-case gameBoard in
+                // Create a variable array in order to store a test-case cpuBoard 
                 let cpuBoard = [];
                 // Update cpuBoard to reflect the current state of the gameBoard
                 for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
@@ -220,19 +220,17 @@ const gameFlow = (() => {
                         cpuBoard.push(gameBoard.gameBoardArray[i]);
                     }
                 }
-                // Create a test-case gameBoard by inserting playerCPU.marker into cpuBoard,
-                // using each empty gameBoard space as an index identifier (while iterating through the emptyMoves array)
+                // Create the test-case cpuBoard by inserting playerCPU.marker into cpuBoard at each index of the emptyMoves array (iterating)
                 cpuBoard[emptyMoves[index]] = playerCPU.marker;
-                // If the test-case cpuBoard is a winner, return that index number
+                // If the test-case cpuBoard is a winner, return the index number from empyMoves array
                 if (checkWin(cpuBoard, playerCPU.marker) !== null) {
                     return emptyMoves[index];
                 }                
             }
-        // Second check if player1 can make a winning move on the gameBoard
+        // Second check if player1 can make a winning move on the current gameBoard
+        // Using the same logic as above, return the corresponding index from emptyMoves array, if a winning move is available
         for (index in emptyMoves) {
-                // Create variables to store test-case arrays in
                 let huBoard = [];
-                // Update each array variable to reflect the current state of the gameBoard
                 for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
                     if (gameBoard.gameBoardArray[i] === '') {
                         huBoard.push(i);
@@ -240,20 +238,17 @@ const gameFlow = (() => {
                         huBoard.push(gameBoard.gameBoardArray[i]);
                     }
                 }
-                // Insert player markers into each emptySpace on the gameBoard
                 huBoard[emptyMoves[index]] = player1.marker;
-                // If the test-case cpuBoard is a winner, return that index number
-                
-                
-                
                 if (checkWin(huBoard, player1.marker) !== null) {
                     return emptyMoves[index];
                 }
             }
-            // If no killer move available for either player, 
-            // search for an available move, beginning with space 1
+            // If there is no winning move available for either player 
+            // Input cpu marker at space 1 (return 1)
+            // This move forces a tie when the opponent uses a cornering strategy (second piece of human logic) 
             if (gameBoard.gameBoardArray[1] === '') {
                 return 1;
+                // Otherwise return a valid randomMove
             } else {
                 return randomMove();
             }
