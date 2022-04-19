@@ -1,14 +1,16 @@
 # tic-tac-toe
 [Tic Tac Toe](https://github.com/dwgrossberg/tic-tac-toe) is a single-page game app that allows users to play their friends (2-player mode) or the computer (1-player mode).
 
-This game was written in vanilla JavaScript built as part of the open-source Odin Project curriculum. 
+This game was written in vanilla JavaScript and built as part of the open-source Odin Project curriculum. 
 
 
 ## Highlights
 - 1-player mode features two AI bots: an Easy CPU based on a simple `randomMove` function and an unbeatable Hard CPU based on a custom-built `smartishCPU` function
 ![hard CPU bot](img/hard-CPU.png)
+
 - Ability to customize player names and icons for both 1-player and 2-player modes
-![player profiles](img/player-profiles.png)
+![player profiles](img/player-icons.png)
+
 - The gameboard highlights the first winning combination and sets the `backgroundImage` of the container to match the winning player's game piece
 ![player icon display feature](img/icon-display.png)
 
