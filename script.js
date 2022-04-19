@@ -192,13 +192,11 @@ const gameFlow = (() => {
         }
     }
 
-    // This was my solution after spending far too long 
-    // attempting to get a minimax function up and running. 
-    // It's not necessarily smart, but it's also not the dumbest. 
+    // My smart AI bot solution - without using minimax function
     const smartishCPU = () => {
         let emptyMoves = emptySpaces();
         console.log(emptyMoves);
-        // First move is either the middle space or the top left corner
+        // First move is either the middle space or the top left corner, depending on what player1 chooses
         if (turnCounter === 0) {
             if (gameBoard.gameBoardArray[4] === '') {
                 turnCounter++;
@@ -207,13 +205,14 @@ const gameFlow = (() => {
                 turnCounter++;
                 return 0;
             }
-        // After the first move
+        // Second move and all subsequent moves follow the conditions below:
+        // First check if playerCPU can make a winning move on the gameBoard
         } else if (turnCounter >= 1) {
-            // Iterate through the emptyMoves array
+            // Iterate through the emptyMoves arraye
             for (index in emptyMoves) {
-                // Create variables to store test-case arrays in
+                // Create a variable array to store a test-case gameBoard in
                 let cpuBoard = [];
-                // Update each array variable to reflect the current state of the gameBoard
+                // Update cpuBoard to reflect the current state of the gameBoard
                 for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
                     if (gameBoard.gameBoardArray[i] === '') {
                         cpuBoard.push(i);
@@ -221,18 +220,16 @@ const gameFlow = (() => {
                         cpuBoard.push(gameBoard.gameBoardArray[i]);
                     }
                 }
-                // Insert player markers into each emptySpace on the gameBoard
+                // Create a test-case gameBoard by inserting playerCPU.marker into cpuBoard,
+                // using each empty gameBoard space as an index identifier (while iterating through the emptyMoves array)
                 cpuBoard[emptyMoves[index]] = playerCPU.marker;
                 // If the test-case cpuBoard is a winner, return that index number
                 if (checkWin(cpuBoard, playerCPU.marker) !== null) {
                     return emptyMoves[index];
-                }
-                // Else if the test-case huBoard is a winner, return that index number
-                
-                
-                
+                }                
             }
-            for (index in emptyMoves) {
+        // Second check if player1 can make a winning move on the gameBoard
+        for (index in emptyMoves) {
                 // Create variables to store test-case arrays in
                 let huBoard = [];
                 // Update each array variable to reflect the current state of the gameBoard
@@ -258,14 +255,6 @@ const gameFlow = (() => {
             if (gameBoard.gameBoardArray[1] === '') {
                 return 1;
             } else {
-            // else if (gameBoard.gameBoardArray[2] === '') {
-                // return 2;
-            // } else if (gameBoard.gameBoardArray[6] === '') {
-                // return 6;
-            // } else if (gameBoard.gameBoardArray[8] === '') {
-                // return 8;
-            // } else {
-                // Otherwise return a legal randomMove
                 return randomMove();
             }
         }
