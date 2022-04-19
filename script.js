@@ -235,9 +235,17 @@ const gameFlow = (() => {
                     return emptyMoves[index];
                 }
             }
-            // Otherwise return a legal randomMove
-            return randomMove();
-
+            // Search for an available corner
+            if (gameBoard.gameBoardArray[2] === '') {
+                return 2;
+            } else if (gameBoard.gameBoardArray[6] === '') {
+                return 6;
+            } else if (gameBoard.gameBoardArray[8] === '') {
+                return 8;
+            } else {
+                // Otherwise return a legal randomMove
+                return randomMove();
+            }
         }
     }
 
