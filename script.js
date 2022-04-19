@@ -212,37 +212,59 @@ const gameFlow = (() => {
             // Iterate through the emptyMoves array
             for (index in emptyMoves) {
                 // Create variables to store test-case arrays in
-                let huBoard = [];
                 let cpuBoard = [];
                 // Update each array variable to reflect the current state of the gameBoard
                 for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
                     if (gameBoard.gameBoardArray[i] === '') {
-                        huBoard.push(i);
                         cpuBoard.push(i);
                     } else {
-                        huBoard.push(gameBoard.gameBoardArray[i]);
                         cpuBoard.push(gameBoard.gameBoardArray[i]);
                     }
                 }
                 // Insert player markers into each emptySpace on the gameBoard
-                huBoard[emptyMoves[index]] = player1.marker;
                 cpuBoard[emptyMoves[index]] = playerCPU.marker;
                 // If the test-case cpuBoard is a winner, return that index number
                 if (checkWin(cpuBoard, playerCPU.marker) !== null) {
                     return emptyMoves[index];
+                }
                 // Else if the test-case huBoard is a winner, return that index number
-                } else if (checkWin(huBoard, player1.marker) !== null) {
+                
+                
+                
+            }
+            for (index in emptyMoves) {
+                // Create variables to store test-case arrays in
+                let huBoard = [];
+                // Update each array variable to reflect the current state of the gameBoard
+                for (let i = 0; i < gameBoard.gameBoardArray.length; i++) {
+                    if (gameBoard.gameBoardArray[i] === '') {
+                        huBoard.push(i);
+                    } else {
+                        huBoard.push(gameBoard.gameBoardArray[i]);
+                    }
+                }
+                // Insert player markers into each emptySpace on the gameBoard
+                huBoard[emptyMoves[index]] = player1.marker;
+                // If the test-case cpuBoard is a winner, return that index number
+                
+                
+                
+                if (checkWin(huBoard, player1.marker) !== null) {
                     return emptyMoves[index];
                 }
             }
-            // Search for an available corner
-            if (gameBoard.gameBoardArray[2] === '') {
-                return 2;
-            } else if (gameBoard.gameBoardArray[6] === '') {
-                return 6;
-            } else if (gameBoard.gameBoardArray[8] === '') {
-                return 8;
+            // If no killer move available for either player, 
+            // search for an available move, beginning with space 1
+            if (gameBoard.gameBoardArray[1] === '') {
+                return 1;
             } else {
+            // else if (gameBoard.gameBoardArray[2] === '') {
+                // return 2;
+            // } else if (gameBoard.gameBoardArray[6] === '') {
+                // return 6;
+            // } else if (gameBoard.gameBoardArray[8] === '') {
+                // return 8;
+            // } else {
                 // Otherwise return a legal randomMove
                 return randomMove();
             }
