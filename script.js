@@ -245,7 +245,7 @@ const gameFlow = (() => {
             }
             // If there is no winning move available for either player 
             // Input cpu marker at first open middle side space
-            // This move forces a tie, at minimum, when the opponent uses a cornering strategy (second piece of human logic) 
+            // This move forces a tie, at minimum, when the opponent pursues a cornering strategy (second piece of human logic) 
             if (gameBoard.gameBoardArray[1] === '') {
                 return 1;
             } else if (gameBoard.gameBoardArray[3] === '') {
