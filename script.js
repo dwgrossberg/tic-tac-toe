@@ -244,10 +244,16 @@ const gameFlow = (() => {
                 }
             }
             // If there is no winning move available for either player 
-            // Input cpu marker at space 1 (return 1)
+            // Input cpu marker at first open middle side space
             // This move forces a tie when the opponent uses a cornering strategy (second piece of human logic) 
             if (gameBoard.gameBoardArray[1] === '') {
                 return 1;
+            } else if (gameBoard.gameBoardArray[3] === '') {
+                return 3;
+            } else if (gameBoard.gameBoardArray[5] === '') { 
+                return 5;
+            } else if (gameBoard.gameBoardArray[7] === '') { 
+                return 7;
                 // Otherwise return a valid randomMove
             } else {
                 return randomMove();
