@@ -244,7 +244,17 @@ const gameFlow = (() => {
                 }
             }
             // If there is no winning move available for either player 
-            // Input cpu marker at first open middle side space
+            // Search for an empty corner surrounded by player1's markers
+            if (gameBoard.gameBoardArray[0] === '' && gameBoard.gameBoardArray[1] === player1.marker && gameBoard.gameBoardArray[3] === player1.marker) {
+                return 0;
+            } else if (gameBoard.gameBoardArray[2] === '' && gameBoard.gameBoardArray[1] === player1.marker && gameBoard.gameBoardArray[5] === player1.marker) {
+                return 2;
+            } else if (gameBoard.gameBoardArray[6] === '' && gameBoard.gameBoardArray[3] === player1.marker && gameBoard.gameBoardArray[7] === player1.marker) {
+                return 6;
+            } else if (gameBoard.gameBoardArray[8] === '' && gameBoard.gameBoardArray[5] === player1.marker && gameBoard.gameBoardArray[7] === player1.marker) {
+                return 8;
+            }
+            // Otherwise input cpu marker at first open middle side space
             // This move forces a tie, at minimum, when the opponent pursues a cornering strategy (second piece of human logic) 
             if (gameBoard.gameBoardArray[1] === '') {
                 return 1;
