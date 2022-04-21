@@ -196,7 +196,7 @@ const gameFlow = (() => {
     const smartishCPU = () => {
         let emptyMoves = emptySpaces();
         console.log(emptyMoves);
-        // First move is either the middle space or the top left corner, depending on what player1 chooses (first piece of human logic)
+        // First move is either the middle space or the top left corner, depending on what player1 chooses 
         if (turnCounter === 0) {
             if (gameBoard.gameBoardArray[4] === '') {
                 turnCounter++;
@@ -255,7 +255,7 @@ const gameFlow = (() => {
                 return 8;
             }
             // Otherwise input cpu marker at first open middle side space
-            // This move forces a tie, at minimum, when the opponent pursues a cornering strategy (second piece of human logic) 
+            // This move forces a tie, at minimum, when the opponent pursues a cornering strategy 
             if (gameBoard.gameBoardArray[1] === '') {
                 return 1;
             } else if (gameBoard.gameBoardArray[3] === '') {
